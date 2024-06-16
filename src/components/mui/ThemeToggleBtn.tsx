@@ -18,11 +18,11 @@ function ThemeToggleBtn() {
     <Box
       sx={{
         display: "flex",
-        width: "100%",
+        // width: "100%",
         alignItems: "center",
         justifyContent: "center",
-        bgcolor: "background.default",
-        color: "text.primary",
+        // bgcolor: "background.default",
+        // color: "text.primary",
         borderRadius: 1,
         p: 3,
       }}

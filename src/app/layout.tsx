@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import MuiProvider from "@/contexts/muiProvider";
-import StoreProvider from "@/contexts/storeProvider";
+import MuiProvider from "@/providers/muiProvider";
+import StoreProvider from "@/providers/storeProvider";
 import { useMemo } from "react";
+import ResponsiveAppBar from "@/components/mui/NavBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,12 +19,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <StoreProvider>
-      <MuiProvider>
-        <html lang="en">
-          <body className={inter.className}>{children}</body>
-        </html>
-      </MuiProvider>
-    </StoreProvider>
+    <html lang="en">
+      <body className={inter.className}>
+        <StoreProvider>
+          <MuiProvider>
+            <ResponsiveAppBar />
+            {children}
+          </MuiProvider>
+        </StoreProvider>
+      </body>
+    </html>
   );
 }
