@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import MuiProvider from "@/contexts/muiProvider";
 import StoreProvider from "@/contexts/storeProvider";
+import { useMemo } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 

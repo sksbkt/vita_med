@@ -1,18 +1,13 @@
 "use client";
 
-import { useAppDispatch } from "@/hooks/useStore";
-import { setThemeMode } from "@/lib/features/themeSlice";
-import Image from "next/image";
+import ThemeToggleBtn from "@/components/mui/ThemeToggleBtn";
+import { Box } from "@mui/material";
+// import { theme } from "@/theme/muiTheme";
 
 export default function Home() {
-  const dispatch = useAppDispatch();
   return (
-    <button
-      onClick={() => {
-        dispatch(setThemeMode({ darkMode: false, ltrMode: false }));
-      }}
-    >
-      CLICK ME
-    </button>
+    // <Box sx={{ width: "100vw", height: "100vh" }}>
+    <ThemeToggleBtn />
+    // </Box>
   );
 }
