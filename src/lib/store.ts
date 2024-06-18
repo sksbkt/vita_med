@@ -1,8 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import themeReducer from "@/lib/features/themeSlice";
+import localeReducer from "@/lib/features/localeSlice";
 export const store = configureStore({
   reducer: {
     themeSlice: themeReducer,
+    localeSlice: localeReducer,
   },
   devTools: process.env.NODE_ENV != "production",
 });

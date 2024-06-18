@@ -1,18 +1,23 @@
-import { theme } from "@/theme/muiTheme";
+"use client";
 import { Box, IconButton } from "@mui/material";
-import React, { useEffect } from "react";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
 import { setThemeMode } from "@/lib/features/themeSlice";
+import { useEffect, useState } from "react";
 
 function ThemeToggleBtn() {
   const { darkMode, ltrMode } = useAppSelector((state) => state.themeSlice);
   const dispatch = useAppDispatch();
+  // ? SSR conflict issue
+  const [mode, setMode] = useState("");
 
   function toggleDarkMode() {
     dispatch(setThemeMode({ darkMode: !darkMode, ltrMode }));
   }
+  useEffect(() => {
+    setMode(darkMode ? "Dark" : "Light");
+  }, [darkMode]);
 
   return (
     <Box
@@ -27,7 +32,8 @@ function ThemeToggleBtn() {
         p: 3,
       }}
     >
-      {darkMode ? "Dark" : "Light"} mode
+      {/* //! TESTING */}
+      {mode} mode
       <IconButton
         sx={{ ml: 1 }}
         onClick={toggleDarkMode}

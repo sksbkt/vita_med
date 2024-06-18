@@ -1,7 +1,7 @@
-import { initialLocalStorageKey } from "@/locale/strings";
+import { themeInitialLocalStorageKey } from "@/locale/strings";
 import { ThemeStateType } from "@/types/types";
 
-export function getThemeSettingsFromStorage<T>(key: string): T | null {
+export function getSettingsFromStorage<T>(key: string): T | null {
   try {
     const serializedState = localStorage.getItem(key);
     if (serializedState === null) return null;
@@ -12,6 +12,6 @@ export function getThemeSettingsFromStorage<T>(key: string): T | null {
   }
 }
 
-export function setThemeSettingsFromStorage<T>(state: T) {
-  localStorage.setItem(initialLocalStorageKey, JSON.stringify(state));
+export function setSettingsInStorage<T>(state: T, key: string) {
+  localStorage.setItem(key, JSON.stringify(state));
 }

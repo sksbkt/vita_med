@@ -1,9 +1,9 @@
 import {
-  getThemeSettingsFromStorage,
-  setThemeSettingsFromStorage,
+  getSettingsFromStorage,
+  setSettingsInStorage,
 } from "@/helpers/localStorage";
 import { RootState } from "@/lib/store";
-import { initialLocalStorageKey } from "@/locale/strings";
+import { themeInitialLocalStorageKey } from "@/locale/strings";
 import { ThemeStateType } from "@/types/types";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
@@ -15,12 +15,12 @@ const initialState: ThemeStateType = {
 export const themeSlice = createSlice({
   name: "themeSlice",
   initialState:
-    getThemeSettingsFromStorage(initialLocalStorageKey) || initialState,
+    getSettingsFromStorage(themeInitialLocalStorageKey) || initialState,
   reducers: {
     setThemeMode: (state, action: PayloadAction<ThemeStateType>) => {
       state.darkMode = action.payload.darkMode;
       state.ltrMode = action.payload.ltrMode;
-      setThemeSettingsFromStorage(state);
+      setSettingsInStorage(state, themeInitialLocalStorageKey);
     },
   },
 });

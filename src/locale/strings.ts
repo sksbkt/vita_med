@@ -1,1 +1,2 @@
-export const initialLocalStorageKey = "themeSettings";
+export const themeInitialLocalStorageKey = "themeSettings";
+export const localeInitialLocalStorageKey = "localeSettings";
