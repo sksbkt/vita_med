@@ -14,7 +14,8 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import ThemeToggleBtn from "@/components/mui/ThemeToggleBtn";
-import LanguageSelector from "@/components/mui/LanuageSelector";
+import LanguageSelector from "@/components/mui/LanguageSelector";
+import { red } from "@mui/material/colors";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];

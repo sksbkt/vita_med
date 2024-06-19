@@ -1,7 +1,11 @@
-import { themeInitialLocalStorageKey } from "@/locale/strings";
-import { ThemeStateType } from "@/types/types";
-
 export function getSettingsFromStorage<T>(key: string): T | null {
+  if (typeof window === "undefined") {
+    // If we're on the server, return a default value or throw an error
+    console.error(
+      "Attempted to access localStorage in a non-browser environment."
+    );
+    return null;
+  }
   try {
     const serializedState = localStorage.getItem(key);
     if (serializedState === null) return null;
@@ -13,5 +17,16 @@ export function getSettingsFromStorage<T>(key: string): T | null {
 }
 
 export function setSettingsInStorage<T>(state: T, key: string) {
-  localStorage.setItem(key, JSON.stringify(state));
+  if (typeof window === "undefined") {
+    // If we're on the server, log an error or handle differently
+    console.error(
+      "Attempted to set localStorage in a non-browser environment."
+    );
+    return;
+  }
+  try {
+    localStorage.setItem(key, JSON.stringify(state));
+  } catch (e) {
+    console.log(e);
+  }
 }

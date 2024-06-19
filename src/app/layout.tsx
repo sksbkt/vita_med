@@ -19,10 +19,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  console.clear();
   return (
     <StoreProvider>
       <MuiProvider>
-        <CssBaseline />
         <HtmlClientSide>
           <ResponsiveAppBar />
           {children}

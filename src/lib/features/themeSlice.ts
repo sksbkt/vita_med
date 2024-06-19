@@ -8,7 +8,7 @@ import { ThemeStateType } from "@/types/types";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 const initialState: ThemeStateType = {
-  darkMode: false,
+  darkMode: true,
   ltrMode: true,
 };
 
