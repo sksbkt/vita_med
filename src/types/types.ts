@@ -6,3 +6,10 @@ export interface ThemeStateType {
 export interface LocaleStateType {
   language: string;
 }
+
+export interface LoginResStateType {
+  token: string;
+  userName: string | null;
+  id: string;
+  isLoggedIn: boolean;
+}

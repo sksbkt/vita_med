@@ -4,8 +4,8 @@ import "./globals.css";
 import MuiProvider from "@/providers/muiProvider";
 import StoreProvider from "@/providers/storeProvider";
 import ResponsiveAppBar from "@/components/mui/NavBar";
-import HtmlClientSide from "@/components/layoutClientSide/htmlClientSide";
-import CssBaseline from "@mui/material/CssBaseline";
+
+import AuthWrapper from "@/providers/authWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,13 +21,19 @@ export default function RootLayout({
 }>) {
   console.clear();
   return (
-    <StoreProvider>
-      <MuiProvider>
-        <HtmlClientSide>
-          <ResponsiveAppBar />
-          {children}
-        </HtmlClientSide>
-      </MuiProvider>
-    </StoreProvider>
+    <html lang="en">
+      <body className={inter.className}>
+        <StoreProvider>
+          <AuthWrapper>
+            <MuiProvider>
+              {/* <HtmlClientSide> */}
+              <ResponsiveAppBar />
+              {children}
+              {/* </HtmlClientSide> */}
+            </MuiProvider>
+          </AuthWrapper>
+        </StoreProvider>
+      </body>
+    </html>
   );
 }

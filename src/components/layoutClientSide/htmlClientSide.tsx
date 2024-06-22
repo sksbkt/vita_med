@@ -1,5 +1,5 @@
 "use client";
-
+// ! DEPRECATED
 import { CssBaseline, useTheme } from "@mui/material";
 import { Inter } from "next/font/google";
 
@@ -11,6 +11,7 @@ export default function HtmlClientSide({
   children: React.ReactNode;
 }) {
   const theme = useTheme();
+  document.dir = "";
   return (
     <html
       lang="en"

@@ -22,9 +22,10 @@ function MuiProvider({ children }: { children: React.ReactNode }) {
   }, [darkMode, ltrMode]);
 
   const cacheRtl = createCache({
-    key: "muirtl",
-    stylisPlugins: [prefixer, rtlPlugin],
+    key: ltrMode ? "muiltr" : "muirtl",
+    stylisPlugins: ltrMode ? [prefixer, rtlPlugin] : [],
   });
+  document.dir = ltrMode ? "ltr" : "rtl";
   return (
     <AppRouterCacheProvider>
       <CacheProvider value={cacheRtl}>
