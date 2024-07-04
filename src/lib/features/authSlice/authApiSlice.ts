@@ -1,4 +1,5 @@
-import { LoginResStateType } from "@/types/types";
+import { LoginResponseType, RegisterPayload } from "@/types/types";
+import { User } from "@prisma/client";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const authApi = createApi({
@@ -11,7 +12,7 @@ export const authApi = createApi({
   }),
   endpoints: (builder) => ({
     login: builder.mutation<
-      LoginResStateType,
+      LoginResponseType,
       {
         userName: string;
         password: string;
@@ -26,7 +27,7 @@ export const authApi = createApi({
         },
       }),
     }),
-    getAuthData: builder.query<LoginResStateType, { token: string }>({
+    getAuthData: builder.query<LoginResponseType, { token: string }>({
       query: ({ token }) => ({
         url: "api/auth-details",
         method: "GET",
@@ -35,8 +36,26 @@ export const authApi = createApi({
         },
       }),
     }),
+    register: builder.mutation<LoginResponseType, RegisterPayload>({
+      query: ({
+        userName,
+        password,
+        firstName,
+        lastName,
+      }: RegisterPayload) => ({
+        url: "/api/register",
+        method: "POST",
+        body: {
+          userName,
+          password,
+          firstName,
+          lastName,
+        },
+      }),
+    }),
   }),
   keepUnusedDataFor: 600,
 });
 
-export const { useLoginMutation, useGetAuthDataQuery } = authApi;
+export const { useLoginMutation, useGetAuthDataQuery, useRegisterMutation } =
+  authApi;

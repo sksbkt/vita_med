@@ -1,13 +1,15 @@
 import { PrismaClient } from "@prisma/client";
 
 declare global {
-  var prisma: PrismaClient;
+  var prismaGlobal: PrismaClient | undefined;
 }
 
-export const prisma = global.prisma || new PrismaClient();
+// if (!global.prismaGlobal) global.prismaGlobal = new PrismaClient();
+
+export const prisma = global.prismaGlobal || new PrismaClient();
 
 if (process.env.NODE_ENV !== "production") {
-  global.prisma = prisma;
+  global.prismaGlobal = prisma;
 }
 
 export default async function connectDB() {

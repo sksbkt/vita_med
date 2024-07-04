@@ -1,24 +1,41 @@
-import { setAuthCookie } from "@/lib/cookies";
+import {
+  AUTH_REFRESH_TOKEN,
+  AUTH_TOKEN,
+  expireCookies,
+  getAuthCookie,
+  removeCookies,
+  setAuthCookie,
+} from "@/lib/cookies";
 import { authApi } from "@/lib/features/authSlice/authApiSlice";
 import { RootState } from "@/lib/store";
-import { LoginResStateType } from "@/types/types";
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { setCookie } from "cookies-next";
+import { LoginResponseType } from "@/types/types";
+import {
+  PayloadAction,
+  // PayloadAction,
+  createSlice,
+} from "@reduxjs/toolkit";
 
-const initialState: Partial<LoginResStateType> = {};
+const initialState: Partial<LoginResponseType> = {};
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setCredentials(state, action: PayloadAction<LoginResStateType>) {
-      const { userName } = action.payload;
-      state.userName = userName;
+    // setCredentials: (state, action: PayloadAction<LoginResStateType>) => {
+    //   const { userName } = action.payload;
+    //   state.userName = userName;
+    // },
+    logOut: () => {
+      removeCookies([AUTH_TOKEN, AUTH_REFRESH_TOKEN]);
+      return initialState;
     },
-    logOut(state) {
-      state.userName = null;
-      state.token = "";
-      state.isLoggedIn = false;
+    expireToken: (state, action: PayloadAction<string[]>) => {
+      expireCookies(action.payload);
+      const token = getAuthCookie(AUTH_TOKEN);
+      const refreshToken = getAuthCookie(AUTH_REFRESH_TOKEN);
+
+      state.token = token;
+      state.refreshToken = refreshToken;
     },
   },
   extraReducers: (builder) => {
@@ -27,6 +44,7 @@ const authSlice = createSlice({
         authApi.endpoints.login.matchFulfilled,
         (_state, { payload }) => {
           setAuthCookie(payload.token, "auth_token");
+          setAuthCookie(payload.refreshToken, "auth_token");
           return payload;
         }
       )
@@ -42,6 +60,9 @@ const authSlice = createSlice({
 
 export const getAuthState = (state: RootState) => state.authSlice;
 
-export const { logOut, setCredentials } = authSlice.actions;
+export const {
+  logOut,
+  // setCredentials
+} = authSlice.actions;
 
 export default authSlice.reducer;

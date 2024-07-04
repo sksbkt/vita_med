@@ -12,7 +12,7 @@ function AuthWrapper({ children }: { children: React.ReactNode }) {
   const { push } = useRouter();
   const dispatch = useAppDispatch();
   const pathName = usePathname();
-  const isAuthedRoute = AUTHED_ROUTES.includes(pathName);
+  const isAuthedRoute = isAuthed(pathName);
   const { token } = getValidAuthToken();
   const { userName } = useAppSelector((state) => state.authSlice);
 
@@ -20,11 +20,16 @@ function AuthWrapper({ children }: { children: React.ReactNode }) {
     // ? this query will only execute if the token is valid and the user email is not already in the redux store
     { token: token || "" },
     // ? The useGetAuthDataQuery hook will not execute the query at all if these values are faulty
-    { skip: !!userName || !!token }
+    { skip: !!userName || !token }
   );
+  console.log(
+    pathName.substring(pathName.lastIndexOf("/", pathName.length)),
+    isAuthedRoute
+  );
+
   useEffect(() => {
     if (isAuthedRoute && !token) {
-      push("/login");
+      push("/user/login");
       dispatch(logOut());
     }
   }, [token, push]);
@@ -35,3 +40,9 @@ function AuthWrapper({ children }: { children: React.ReactNode }) {
 }
 
 export default AuthWrapper;
+
+function isAuthed(pathName: string) {
+  return AUTHED_ROUTES.includes(
+    pathName.substring(pathName.lastIndexOf("/", pathName.length))
+  );
+}

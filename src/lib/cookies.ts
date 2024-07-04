@@ -1,6 +1,9 @@
-import { getCookie, setCookie } from "cookies-next";
+import { deleteCookie, getCookie, setCookie } from "cookies-next";
 
-const getAuthCookies = (name: string) => {
+export const AUTH_TOKEN = "token";
+export const AUTH_REFRESH_TOKEN = "refreshToken";
+
+export const getAuthCookie = (name: string) => {
   const cookie = getCookie(name);
   if (!cookie) return undefined;
   return Buffer.from(cookie, "base64").toString("ascii");
@@ -8,7 +11,7 @@ const getAuthCookies = (name: string) => {
 
 // ? GET COOKIES
 export const getValidAuthToken = () => {
-  const token = getAuthCookies("auth_token");
+  const token = getAuthCookie("auth_token");
   const now = new Date();
   const tokenDate = new Date(token || 0);
   return {
@@ -27,3 +30,13 @@ export const setAuthCookie = (token: string, name: string) => {
     // secure: process.env.NODE_ENV === 'production',
   });
 };
+
+// ? DELETE COOKIES
+export const removeCookies = (cookies: string[]) => {
+  cookies.forEach((cookie) => {
+    deleteCookie(cookie);
+  });
+};
+
+// ? EXPIRE COOKIES
+export const expireCookies = (cookies: string[]) => {};

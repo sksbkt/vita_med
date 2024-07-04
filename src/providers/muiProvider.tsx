@@ -25,7 +25,9 @@ function MuiProvider({ children }: { children: React.ReactNode }) {
     key: ltrMode ? "muiltr" : "muirtl",
     stylisPlugins: ltrMode ? [prefixer, rtlPlugin] : [],
   });
-  document.dir = ltrMode ? "ltr" : "rtl";
+  useEffect(() => {
+    if (typeof window != "undefined") document.dir = ltrMode ? "ltr" : "rtl";
+  }, [ltrMode]);
   return (
     <AppRouterCacheProvider>
       <CacheProvider value={cacheRtl}>
