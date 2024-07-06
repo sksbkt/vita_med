@@ -1,6 +1,6 @@
 // app/api/hello/route.ts
 import bcrypt from "bcrypt";
-import { prisma } from "@/lib/utils/prima";
+import { prisma } from "@/lib/utils/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 

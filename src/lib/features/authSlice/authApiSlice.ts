@@ -29,7 +29,7 @@ export const authApi = createApi({
     }),
     getAuthData: builder.query<LoginResponseType, { token: string }>({
       query: ({ token }) => ({
-        url: "api/auth-details",
+        url: "/api/auth-details",
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

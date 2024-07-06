@@ -3,12 +3,15 @@ import {
   setSettingsInStorage,
 } from "@/helpers/localStorage";
 import { RootState } from "@/lib/store";
-import { localeInitialLocalStorageKey } from "@/locale/strings";
-import { LocaleStateType } from "@/types/types";
+import { LANG_EN, localeInitialLocalStorageKey } from "@/locale/strings";
+import { Lang, Languages } from "@/types/types";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-const initialState: LocaleStateType = {
-  language: "en",
+console.log(LANG_EN);
+
+const initialState: Lang = {
+  lang: Languages.EN,
+  dic: LANG_EN,
 };
 
 export const localeSlice = createSlice({
@@ -16,8 +19,9 @@ export const localeSlice = createSlice({
   initialState:
     getSettingsFromStorage(localeInitialLocalStorageKey) || initialState,
   reducers: {
-    setLanguage: (state, action: PayloadAction<LocaleStateType>) => {
-      state.language = action.payload.language;
+    setLanguage: (state, action: PayloadAction<Lang>) => {
+      state.lang = action.payload.lang;
+      state.dic = action.payload.dic;
       setSettingsInStorage(state, localeInitialLocalStorageKey);
     },
   },

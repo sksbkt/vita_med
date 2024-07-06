@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
 import { setLanguage } from "@/lib/features/localeSlice";
 import { setThemeMode } from "@/lib/features/themeSlice";
+import { Lang, Languages } from "@/types/types";
+import { LANG_EN, LANG_FA } from "@/locale/strings";
 
 export default function LanguageSelector() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -14,7 +16,7 @@ export default function LanguageSelector() {
 
   const dispatch = useAppDispatch();
 
-  const { language } = useAppSelector((state) => state.localeSlice);
+  const { lang, dic } = useAppSelector((state) => state.localeSlice);
   const { darkMode } = useAppSelector((state) => state.themeSlice);
 
   const [currLang, setCurrLang] = useState("");
@@ -22,9 +24,16 @@ export default function LanguageSelector() {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleSelection = (lang: string) => {
-    dispatch(setLanguage({ language: lang }));
-    dispatch(setThemeMode({ darkMode: darkMode, ltrMode: lang == "en" }));
+  const handleSelection = (input: Languages) => {
+    dispatch(
+      setLanguage({
+        lang: input,
+        dic: input == Languages.EN ? LANG_EN : LANG_FA,
+      })
+    );
+    dispatch(
+      setThemeMode({ darkMode: darkMode, ltrMode: input == Languages.EN })
+    );
     setAnchorEl(null);
   };
   const handleClose = (event: React.MouseEvent<HTMLElement>) => {
@@ -32,8 +41,8 @@ export default function LanguageSelector() {
   };
 
   useEffect(() => {
-    setCurrLang(language);
-  }, [language]);
+    setCurrLang(Languages[lang]);
+  }, [lang]);
 
   return (
     <div>
@@ -56,8 +65,10 @@ export default function LanguageSelector() {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={() => handleSelection("en")}>English</MenuItem>
-        <MenuItem onClick={() => handleSelection("fa")}>Farsi</MenuItem>
+        <MenuItem onClick={() => handleSelection(Languages.EN)}>
+          English
+        </MenuItem>
+        <MenuItem onClick={() => handleSelection(Languages.FA)}>Farsi</MenuItem>
       </Menu>
     </div>
   );

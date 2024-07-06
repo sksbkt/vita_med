@@ -1,3 +1,5 @@
+import { LANG_FA } from "./../locale/strings";
+import { LANG_EN } from "@/locale/strings";
 import { Role } from "@prisma/client";
 
 export interface ThemeStateType {
@@ -5,9 +7,9 @@ export interface ThemeStateType {
   ltrMode: boolean;
 }
 
-export interface LocaleStateType {
-  language: string;
-}
+// export interface LocaleStateType {
+//   language: Lang;
+// }
 
 export interface LoginResponseType {
   token: string;
@@ -23,4 +25,16 @@ export interface RegisterPayload {
   firstName: string;
   lastName: string;
   role?: Role;
+}
+
+export interface Lang {
+  lang: Languages;
+  dic: typeof LANG_EN;
+}
+
+export interface dictionary {}
+
+export enum Languages {
+  EN = "EN",
+  FA = "FA",
 }

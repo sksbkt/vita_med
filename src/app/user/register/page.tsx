@@ -1,49 +1,13 @@
 "use client";
-import {
-  Box,
-  Button,
-  Checkbox,
-  Container,
-  FormControlLabel,
-  Grid,
-  Link,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { Form, useFormik } from "formik";
+import { registerValidationSchema } from "@/constants/validations";
+import { useAppSelector } from "@/hooks/useStore";
+import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import { useFormik } from "formik";
 import React from "react";
-import * as yup from "yup";
-import { string } from "yup";
 
 function Register() {
-  const validationSchema = yup.object({
-    userName: string()
-      .required()
-      .min(8, "Username must be at least 8 characters long")
-      .max(16, "Username must be no more than 16 characters long")
-      .matches(
-        /^[a-zA-Z0-9._-]+$/,
-        "Username can only contain letters, numbers, periods, underscores, and hyphens"
-      )
-      .required("Username is required"),
+  const { dic } = useAppSelector((state) => state.localeSlice);
 
-    password: string()
-      .min(8, "Password must be at least 8 characters long")
-      .max(16, "Password must be no more than 16 characters long")
-      .matches(
-        /^[\x20-\x7E]+$/,
-        "Password must contain only keyboard characters"
-      )
-      .required("Password is required"),
-
-    firstName: string()
-      .matches(/^[a-zA-Z]+$/, "First name can only contain letters")
-      .required("First name is required"),
-
-    lastName: string()
-      .matches(/^[a-zA-Z]+$/, "Last name can only contain letters")
-      .required("Last name is required"),
-  });
   const formik = useFormik({
     initialValues: {
       userName: "",
@@ -51,7 +15,7 @@ function Register() {
       firstName: "",
       lastName: "",
     },
-    validationSchema: validationSchema,
+    validationSchema: registerValidationSchema(dic),
     onSubmit: (values) => {
       alert(JSON.stringify(values));
     },
@@ -64,6 +28,8 @@ function Register() {
   //       password: data.get("password"),
   //     });
   //   };
+
+  // useAppSelector()
 
   return (
     <Container
@@ -86,7 +52,7 @@ function Register() {
             component="h1"
             variant="h5"
           >
-            Sign in
+            {dic.REGISTER}
           </Typography>
           {/* <Box
           component="form"
@@ -99,7 +65,7 @@ function Register() {
             required
             fullWidth
             id="username"
-            label="Username"
+            label={dic.USER_NAME}
             name="userName"
             value={formik.values.userName}
             onChange={formik.handleChange}
@@ -113,11 +79,11 @@ function Register() {
             required
             fullWidth
             name="password"
+            label={dic.USER_PASSWORD}
             value={formik.values.password}
             onChange={formik.handleChange}
             error={formik.touched.password && Boolean(formik.errors.password)}
             helperText={formik.touched.password && formik.errors.password}
-            label="Password"
             type="password"
             id="password"
             autoComplete="current-password"
@@ -131,7 +97,7 @@ function Register() {
             onChange={formik.handleChange}
             error={formik.touched.firstName && Boolean(formik.errors.firstName)}
             helperText={formik.touched.firstName && formik.errors.firstName}
-            label="First Name"
+            label={dic.USER_FNAME}
             autoComplete="current-firstName"
           />
           <TextField
@@ -143,47 +109,17 @@ function Register() {
             onChange={formik.handleChange}
             error={formik.touched.lastName && Boolean(formik.errors.lastName)}
             helperText={formik.touched.lastName && formik.errors.lastName}
-            label="Last Name"
+            label={dic.USER_LNAME}
             autoComplete="current-lastName"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                value="remember"
-                color="primary"
-              />
-            }
-            label="Remember me"
           />
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{ mt: 3, mb: 2, height: 60 }}
           >
-            Sign In
+            {dic.SIGNUP}
           </Button>
-          <Grid container>
-            <Grid
-              item
-              xs
-            >
-              <Link
-                href="#"
-                variant="body2"
-              >
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link
-                href="#"
-                variant="body2"
-              >
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
         </Box>
       </form>
       {/* </Box> */}

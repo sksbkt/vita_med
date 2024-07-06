@@ -10,6 +10,7 @@ export const getAuthCookie = (name: string) => {
 };
 
 // ? GET COOKIES
+// TODO: we must get token from cookie and add it to the state
 export const getValidAuthToken = () => {
   const token = getAuthCookie("auth_token");
   const now = new Date();

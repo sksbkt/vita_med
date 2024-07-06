@@ -10,10 +10,10 @@ import createCache from "@emotion/cache";
 import { prefixer } from "stylis";
 import rtlPlugin from "stylis-plugin-rtl";
 import { getTheme } from "@/theme/muiTheme";
+import { LANG_EN, LANG_FA } from "@/locale/strings";
 
 function MuiProvider({ children }: { children: React.ReactNode }) {
   const { darkMode, ltrMode } = useAppSelector((state) => state.themeSlice);
-
   let theme = useMemo(() => {
     // const currentTheme = darkMode ? darkTheme : lightTheme;
     // currentTheme.direction = ltrMode ? "ltr" : "rtl";
@@ -26,7 +26,9 @@ function MuiProvider({ children }: { children: React.ReactNode }) {
     stylisPlugins: ltrMode ? [prefixer, rtlPlugin] : [],
   });
   useEffect(() => {
-    if (typeof window != "undefined") document.dir = ltrMode ? "ltr" : "rtl";
+    if (typeof window != "undefined") {
+      document.dir = ltrMode ? "ltr" : "rtl";
+    }
   }, [ltrMode]);
   return (
     <AppRouterCacheProvider>
