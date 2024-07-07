@@ -22,17 +22,13 @@ function AuthWrapper({ children }: { children: React.ReactNode }) {
     // ? The useGetAuthDataQuery hook will not execute the query at all if these values are faulty
     { skip: !!userName || !token }
   );
-  console.log(
-    pathName.substring(pathName.lastIndexOf("/", pathName.length)),
-    isAuthedRoute
-  );
 
   useEffect(() => {
     if (isAuthedRoute && !token) {
       push("/user/login");
       dispatch(logOut());
     }
-  }, [token, push]);
+  }, [dispatch, isAuthedRoute, push, token]);
   if (isLoading) {
     return <div>Loading...</div>;
   }

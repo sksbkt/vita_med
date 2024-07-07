@@ -15,12 +15,18 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import ThemeToggleBtn from "@/components/mui/ThemeToggleBtn";
 import LanguageSelector from "@/components/mui/LanguageSelector";
-import { red } from "@mui/material/colors";
+import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/hooks/useStore";
+import { logOut } from "@/lib/features/authSlice/authSlice";
+import { Link } from "@mui/material";
 
-const pages = ["Products", "Pricing", "Blog"];
+const pages = ["Products", "Pricing", "About"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function ResponsiveAppBar() {
+  const dispatch = useAppDispatch();
+  const { push } = useRouter();
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -39,34 +45,69 @@ function ResponsiveAppBar() {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (setting: string) => {
+    handleUserMenuOption(setting);
+
     setAnchorElUser(null);
+  };
+
+  const handleUserMenuOption = (option: string) => {
+    switch (option) {
+      case "Account":
+        push("/user/Dashboard");
+        break;
+      case "Account":
+        push("/user/account");
+        break;
+      case "Profile":
+        push("/user/profile");
+        break;
+      case "Logout":
+        push("/user/login");
+        dispatch(logOut());
+        break;
+      default:
+        console.log(`${option} is yet to be implemented`);
+
+        break;
+    }
   };
 
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+          <Link
+            href={"/"}
             sx={{
-              mr: 2,
               display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
+              mr: 1,
               color: "inherit",
-              textDecoration: "none",
+            }}
+            underline="none"
+          >
+            <AdbIcon />
+            <Typography
+              variant="h6"
+              noWrap
+              sx={{
+                mr: 2,
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+              LOGO
+            </Typography>
+          </Link>
+
+          <Box
+            sx={{
+              display: { xs: "flex", md: "none" },
             }}
           >
-            LOGO
-          </Typography>
-
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -74,6 +115,7 @@ function ResponsiveAppBar() {
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               color="inherit"
+              sx={{ ml: "0" }}
             >
               <MenuIcon />
             </IconButton>
@@ -100,43 +142,63 @@ function ResponsiveAppBar() {
                   key={page}
                   onClick={handleCloseNavMenu}
                 >
-                  <Typography textAlign="center">{page}</Typography>
+                  <Box onClick={() => push(`/${page}`)}>
+                    <Typography textAlign="center">{page}</Typography>
+                  </Box>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+          <Link
+            href={"/"}
             sx={{
-              mr: 2,
               display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
+              mr: 1,
               color: "inherit",
-              textDecoration: "none",
             }}
+            underline="none"
           >
-            LOGO
-          </Typography>
+            <AdbIcon sx={{ mr: 1 }} />
+            <Typography
+              variant="h5"
+              noWrap
+              sx={{
+                mr: 2,
+                flexGrow: 1,
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+              LOGO
+            </Typography>
+          </Link>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={() => {
+                  handleCloseNavMenu();
+                  push(`/${page}`);
+                }}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
                 {page}
               </Button>
             ))}
           </Box>
-          <ThemeToggleBtn />
-          <LanguageSelector />
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              mr: "auto",
+            }}
+          >
+            <ThemeToggleBtn />
+            <LanguageSelector />
+          </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton
@@ -168,7 +230,9 @@ function ResponsiveAppBar() {
               {settings.map((setting) => (
                 <MenuItem
                   key={setting}
-                  onClick={handleCloseUserMenu}
+                  onClick={() => {
+                    handleCloseUserMenu(setting);
+                  }}
                 >
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
