@@ -7,8 +7,6 @@ import { LANG_EN, localeInitialLocalStorageKey } from "@/locale/strings";
 import { Lang, Languages } from "@/types/types";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-console.log(LANG_EN);
-
 const initialState: Lang = {
   lang: Languages.EN,
   dic: LANG_EN,
@@ -22,6 +20,7 @@ export const localeSlice = createSlice({
     setLanguage: (state, action: PayloadAction<Lang>) => {
       state.lang = action.payload.lang;
       state.dic = action.payload.dic;
+
       setSettingsInStorage(state, localeInitialLocalStorageKey);
     },
   },

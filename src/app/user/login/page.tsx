@@ -122,30 +122,7 @@ function Login() {
             id="password"
             autoComplete="current-password"
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="firstName"
-            value={formik.values.firstName}
-            onChange={formik.handleChange}
-            error={formik.touched.firstName && Boolean(formik.errors.firstName)}
-            helperText={formik.touched.firstName && formik.errors.firstName}
-            label="First Name"
-            autoComplete="current-firstName"
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="lastName"
-            value={formik.values.lastName}
-            onChange={formik.handleChange}
-            error={formik.touched.lastName && Boolean(formik.errors.lastName)}
-            helperText={formik.touched.lastName && formik.errors.lastName}
-            label="Last Name"
-            autoComplete="current-lastName"
-          />
+
           <FormControlLabel
             control={
               <Checkbox
@@ -177,7 +154,7 @@ function Login() {
             </Grid>
             <Grid item>
               <Link
-                href="#"
+                href="/user/register"
                 variant="body2"
               >
                 {"Don't have an account? Sign Up"}

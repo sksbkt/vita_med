@@ -20,8 +20,13 @@ export const LANG_EN = {
   VAL_ERR_LAST_NAME_INVALID: "Last name can only contain letters",
   VAL_ERR_USERNAME_REQUIRED: "Username is required", // Added
   VAL_ERR_PASSWORD_REQUIRED: "Password is required", // Added
+  Pages: {
+    PRODUCTS: "Products",
+    PRICING: "Pricing",
+    ABOUT: "About",
+  },
 };
-export const LANG_FA = {
+export const LANG_FA: typeof LANG_EN = {
   SIGNUP: "ثبت نام",
   REGISTER: "ثبت نام",
   USER_NAME: "نام کاربری",
@@ -40,4 +45,9 @@ export const LANG_FA = {
   VAL_ERR_LAST_NAME_INVALID: "نام خانوادگی فقط می‌تواند حروف را شامل شود",
   VAL_ERR_USERNAME_REQUIRED: "نام کاربری الزامی است",
   VAL_ERR_PASSWORD_REQUIRED: "رمز عبور الزامی است",
+  Pages: {
+    PRODUCTS: "محصولات",
+    PRICING: "قمیتها",
+    ABOUT: "درباره ما",
+  },
 };

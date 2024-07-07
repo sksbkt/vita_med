@@ -16,15 +16,28 @@ import AdbIcon from "@mui/icons-material/Adb";
 import ThemeToggleBtn from "@/components/mui/ThemeToggleBtn";
 import LanguageSelector from "@/components/mui/LanguageSelector";
 import { useRouter } from "next/navigation";
-import { useAppDispatch } from "@/hooks/useStore";
+import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
 import { logOut } from "@/lib/features/authSlice/authSlice";
 import { Link } from "@mui/material";
+import { useEffect } from "react";
 
 const pages = ["Products", "Pricing", "About"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = [
+  { name: "Profile", href: "/user/profile" },
+  { name: "Account", href: "/user/Account" },
+  { name: "Dashboard", href: "/user/Dashboard" },
+  { name: "Logout", href: "/user/login" },
+];
+
+type pagesType = {
+  [key: string]: string;
+};
 
 function ResponsiveAppBar() {
   const dispatch = useAppDispatch();
+  const { dic } = useAppSelector((state) => state.localeSlice);
+  const { token } = useAppSelector((state) => state.authSlice);
+  const pageNames: pagesType = dic.Pages;
   const { push } = useRouter();
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -45,8 +58,13 @@ function ResponsiveAppBar() {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = (setting: string) => {
-    handleUserMenuOption(setting);
+  const handleCloseUserMenu = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    setting: { name: string; href: string }
+  ) => {
+    e.preventDefault();
+    e.stopPropagation();
+    handleUserMenuOption(setting.name);
 
     setAnchorElUser(null);
   };
@@ -72,6 +90,9 @@ function ResponsiveAppBar() {
         break;
     }
   };
+  useEffect(() => {
+    // ? Temporary workaround for hydration issues
+  }, [dic]);
 
   return (
     <AppBar position="static">
@@ -143,7 +164,9 @@ function ResponsiveAppBar() {
                   onClick={handleCloseNavMenu}
                 >
                   <Box onClick={() => push(`/${page}`)}>
-                    <Typography textAlign="center">{page}</Typography>
+                    <Typography textAlign="center">
+                      {pageNames[page.toUpperCase()]}
+                    </Typography>
                   </Box>
                 </MenuItem>
               ))}
@@ -185,7 +208,7 @@ function ResponsiveAppBar() {
                 }}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
-                {page}
+                {pageNames[page.toUpperCase()]}
               </Button>
             ))}
           </Box>
@@ -199,46 +222,66 @@ function ResponsiveAppBar() {
             <ThemeToggleBtn />
             <LanguageSelector />
           </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton
-                onClick={handleOpenUserMenu}
-                sx={{ p: 0 }}
-              >
-                <Avatar
-                  alt="Remy Sharp"
-                  src="/static/images/avatar/2.jpg"
-                />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem
-                  key={setting}
-                  onClick={() => {
-                    handleCloseUserMenu(setting);
-                  }}
+          {/* //* reverse the token ! modifier after development of this part */}
+          {!token ? (
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton
+                  onClick={handleOpenUserMenu}
+                  sx={{ p: 0 }}
                 >
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+                  <Avatar
+                    alt="Remy Sharp"
+                    src="/static/images/avatar/2.jpg"
+                  />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                // onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem
+                    key={setting.name}
+                    // onClick={() => {}}
+                  >
+                    <Typography
+                      textAlign="center"
+                      href={setting.href}
+                      component={"a"}
+                      onClick={(e) => handleCloseUserMenu(e, setting)}
+                    >
+                      {setting.name}
+                    </Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          ) : (
+            <Link
+              href={"/user/login"}
+              sx={{
+                display: { xs: "none", md: "flex" },
+                mr: 1,
+                color: "inherit",
+              }}
+              underline="none"
+            >
+              login
+            </Link>
+          )}
         </Toolbar>
       </Container>
     </AppBar>

@@ -30,7 +30,6 @@ function MuiProvider({ children }: { children: React.ReactNode }) {
       document.dir = ltrMode ? "ltr" : "rtl";
     }
   }, [ltrMode]);
-
   return (
     <AppRouterCacheProvider>
       <CacheProvider value={cacheRtl}>

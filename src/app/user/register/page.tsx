@@ -1,7 +1,15 @@
 "use client";
 import { registerValidationSchema } from "@/constants/validations";
 import { useAppSelector } from "@/hooks/useStore";
-import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  Link,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useFormik } from "formik";
 import React from "react";
 
@@ -116,10 +124,20 @@ function Register() {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2, height: 60 }}
+            sx={{ mt: 1, mb: 2, height: 60 }}
           >
             {dic.SIGNUP}
           </Button>
+          <Grid container>
+            <Grid item>
+              <Link
+                href="/user/register"
+                variant="body2"
+              >
+                {"Don't have an account? Sign Up"}
+              </Link>
+            </Grid>
+          </Grid>
         </Box>
       </form>
       {/* </Box> */}
