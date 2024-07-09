@@ -1,6 +1,7 @@
 "use client";
 import { registerValidationSchema } from "@/constants/validations";
 import { useAppSelector } from "@/hooks/useStore";
+import { getValidAuthToken } from "@/lib/cookies";
 import {
   Box,
   Button,
@@ -11,11 +12,16 @@ import {
   Typography,
 } from "@mui/material";
 import { useFormik } from "formik";
-import React from "react";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 
 function Register() {
+  const { token } = getValidAuthToken();
+
   const { dic } = useAppSelector((state) => state.localeSlice);
 
+  const { push } = useRouter();
+  usePathname();
   const formik = useFormik({
     initialValues: {
       userName: "",
@@ -28,16 +34,10 @@ function Register() {
       alert(JSON.stringify(values));
     },
   });
-  //   const handleSubmit = (event: HTMLFormElement) => {
-  //     event.preventDefault();
-  //     const data = new FormData(event.currentTarget);
-  //     console.log({
-  //       email: data.get("email"),
-  //       password: data.get("password"),
-  //     });
-  //   };
 
-  // useAppSelector()
+  useEffect(() => {
+    if (token) push("/");
+  });
 
   return (
     <Container
@@ -131,10 +131,10 @@ function Register() {
           <Grid container>
             <Grid item>
               <Link
-                href="/user/register"
+                href="/user/login"
                 variant="body2"
               >
-                {"Don't have an account? Sign Up"}
+                {"Already have an account? Sign Up"}
               </Link>
             </Grid>
           </Grid>

@@ -32,12 +32,16 @@ const settings = [
 type pagesType = {
   [key: string]: string;
 };
+type settingsType = {
+  [key: string]: string;
+};
 
 function ResponsiveAppBar() {
   const dispatch = useAppDispatch();
   const { dic } = useAppSelector((state) => state.localeSlice);
   const { token } = useAppSelector((state) => state.authSlice);
   const pageNames: pagesType = dic.Pages;
+  const settingNames: settingsType = dic.settings;
   const { push } = useRouter();
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -263,7 +267,7 @@ function ResponsiveAppBar() {
                       component={"a"}
                       onClick={(e) => handleCloseUserMenu(e, setting)}
                     >
-                      {setting.name}
+                      {settingNames[setting.name.toUpperCase()]}
                     </Typography>
                   </MenuItem>
                 ))}

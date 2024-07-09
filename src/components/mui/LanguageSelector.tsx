@@ -34,6 +34,7 @@ export default function LanguageSelector() {
     dispatch(
       setThemeMode({ darkMode: darkMode, ltrMode: input == Languages.EN })
     );
+
     setAnchorEl(null);
   };
   const handleClose = (event: React.MouseEvent<HTMLElement>) => {
@@ -42,7 +43,7 @@ export default function LanguageSelector() {
 
   useEffect(() => {
     setCurrLang(Languages[lang]);
-  }, [lang]);
+  }, [dic, lang]);
 
   return (
     <div>

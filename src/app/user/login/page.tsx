@@ -1,4 +1,8 @@
 "use client";
+import { loginValidationSchema } from "@/constants/validations";
+import { useAppSelector } from "@/hooks/useStore";
+import { getValidAuthToken } from "@/lib/cookies";
+import { RememberMe } from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -11,47 +15,24 @@ import {
   Typography,
 } from "@mui/material";
 import { Form, useFormik } from "formik";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 import * as yup from "yup";
 import { string } from "yup";
 
 function Login() {
-  const validationSchema = yup.object({
-    userName: string()
-      .required()
-      .min(8, "Username must be at least 8 characters long")
-      .max(16, "Username must be no more than 16 characters long")
-      .matches(
-        /^[a-zA-Z0-9._-]+$/,
-        "Username can only contain letters, numbers, periods, underscores, and hyphens"
-      )
-      .required("Username is required"),
+  const { token } = getValidAuthToken();
 
-    password: string()
-      .min(8, "Password must be at least 8 characters long")
-      .max(16, "Password must be no more than 16 characters long")
-      .matches(
-        /^[\x20-\x7E]+$/,
-        "Password must contain only keyboard characters"
-      )
-      .required("Password is required"),
+  const { dic } = useAppSelector((state) => state.localeSlice);
 
-    firstName: string()
-      .matches(/^[a-zA-Z]+$/, "First name can only contain letters")
-      .required("First name is required"),
+  const { push } = useRouter();
 
-    lastName: string()
-      .matches(/^[a-zA-Z]+$/, "Last name can only contain letters")
-      .required("Last name is required"),
-  });
   const formik = useFormik({
     initialValues: {
       userName: "",
       password: "",
-      firstName: "",
-      lastName: "",
     },
-    validationSchema: validationSchema,
+    validationSchema: loginValidationSchema(dic),
     onSubmit: (values) => {
       alert(JSON.stringify(values));
     },
@@ -64,6 +45,10 @@ function Login() {
   //       password: data.get("password"),
   //     });
   //   };
+
+  useEffect(() => {
+    if (token) push("/");
+  });
 
   return (
     <Container
@@ -79,27 +64,19 @@ function Login() {
             alignItems: "center",
           }}
         >
-          {/* <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-          <LockOutlinedIcon />
-          </Avatar> */}
           <Typography
             component="h1"
             variant="h5"
           >
-            Sign in
+            {dic.SIGN_IN}
           </Typography>
-          {/* <Box
-          component="form"
-          onSubmit={handleSubmit}
-          noValidate
-          sx={{ mt: 1 }}
-        > */}
+
           <TextField
             margin="normal"
             required
             fullWidth
             id="username"
-            label="Username"
+            label={dic.USER_NAME}
             name="userName"
             value={formik.values.userName}
             onChange={formik.handleChange}
@@ -117,7 +94,7 @@ function Login() {
             onChange={formik.handleChange}
             error={formik.touched.password && Boolean(formik.errors.password)}
             helperText={formik.touched.password && formik.errors.password}
-            label="Password"
+            label={dic.USER_PASSWORD}
             type="password"
             id="password"
             autoComplete="current-password"
@@ -130,7 +107,7 @@ function Login() {
                 color="primary"
               />
             }
-            label="Remember me"
+            label={dic.REMEMBER_ME}
           />
           <Button
             type="submit"
@@ -149,7 +126,7 @@ function Login() {
                 href="#"
                 variant="body2"
               >
-                Forgot password?
+                {dic.FORGOT_PASSWORD}
               </Link>
             </Grid>
             <Grid item>
@@ -157,7 +134,7 @@ function Login() {
                 href="/user/register"
                 variant="body2"
               >
-                {"Don't have an account? Sign Up"}
+                {dic.SIGN_UP_TEXT}
               </Link>
             </Grid>
           </Grid>
