@@ -23,7 +23,11 @@ export default async function RootLayout({
 }>) {
   // DummyUser();
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      // ? we need this "suppressHydrationWarning" here so we wont get the hydration error due to conflict
+      suppressHydrationWarning
+    >
       <body className={inter.className}>
         <StoreProvider>
           <AuthWrapper>

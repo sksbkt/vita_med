@@ -1,23 +1,22 @@
 "use client";
-import React, { use, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import { CssBaseline, GlobalStyles, ThemeProvider } from "@mui/material";
 import { useAppSelector } from "@/hooks/useStore";
-// import { darkTheme, lightTheme } from "@/theme/muiTheme";
 
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import { prefixer } from "stylis";
 import rtlPlugin from "stylis-plugin-rtl";
 import { getTheme } from "@/theme/muiTheme";
+import NextThemesProvider from "@/providers/next-themes/nextThemesProvider";
 
 function MuiProvider({ children }: { children: React.ReactNode }) {
   const { darkMode, ltrMode } = useAppSelector((state) => state.themeSlice);
   const { dic } = useAppSelector((state) => state.localeSlice);
+  const [isMounted, setIsMounted] = useState(false);
+
   let theme = useMemo(() => {
-    // const currentTheme = darkMode ? darkTheme : lightTheme;
-    // currentTheme.direction = ltrMode ? "ltr" : "rtl";
-    // return currentTheme;
     return getTheme(darkMode, ltrMode);
   }, [darkMode, ltrMode]);
 
@@ -30,20 +29,36 @@ function MuiProvider({ children }: { children: React.ReactNode }) {
       document.dir = ltrMode ? "ltr" : "rtl";
     }
   }, [ltrMode, dic, theme]);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   return (
-    <AppRouterCacheProvider>
-      <CacheProvider value={cacheRtl}>
+    <>
+      {isMounted ? (
         <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <GlobalStyles
-            styles={{
-              "*": { transition: "background-color 0.3s, color 0.3s" },
-            }}
-          />
-          {children}
+          <AppRouterCacheProvider>
+            <CacheProvider value={cacheRtl}>
+              <CssBaseline />
+              <GlobalStyles
+                styles={{
+                  "*": { transition: "background-color 0.3s, color 0.3s" },
+                }}
+              />
+              {children}
+            </CacheProvider>
+          </AppRouterCacheProvider>
         </ThemeProvider>
-      </CacheProvider>
-    </AppRouterCacheProvider>
+      ) : (
+        <NextThemesProvider>
+          <div
+            className="flex items-center justify-center h-screen min-h-screen"
+            dir="ltr"
+          >
+            loading...
+          </div>
+        </NextThemesProvider>
+      )}
+    </>
   );
 }
 
