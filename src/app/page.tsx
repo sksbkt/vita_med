@@ -11,6 +11,5 @@ export default function Home() {
         width: { sx: "40%" },
       }}
     ></Box>
-    // </Box>
   );
 }

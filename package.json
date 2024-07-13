@@ -20,6 +20,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/stylis": "^4.2.6",
+    "axios": "^1.7.2",
     "bcrypt": "^5.1.1",
     "cookies-next": "^4.2.1",
     "formik": "^2.4.6",

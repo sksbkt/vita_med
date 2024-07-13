@@ -62,41 +62,9 @@ function ResponsiveAppBar() {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = (
-    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-    setting: { name: string; href: string }
-  ) => {
-    e.preventDefault();
-    e.stopPropagation();
-    handleUserMenuOption(setting.name);
-
+  const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
-  const handleUserMenuOption = (option: string) => {
-    switch (option) {
-      case "Account":
-        push("/user/Dashboard");
-        break;
-      case "Account":
-        push("/user/account");
-        break;
-      case "Profile":
-        push("/user/profile");
-        break;
-      case "Logout":
-        push("/user/login");
-        dispatch(logOut());
-        break;
-      default:
-        console.log(`${option} is yet to be implemented`);
-
-        break;
-    }
-  };
-  useEffect(() => {
-    // ? Temporary workaround for hydration issues
-  }, [dic]);
 
   return (
     <AppBar position="static">
@@ -254,7 +222,7 @@ function ResponsiveAppBar() {
                   horizontal: "right",
                 }}
                 open={Boolean(anchorElUser)}
-                // onClose={handleCloseUserMenu}
+                onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
                   <MenuItem
@@ -265,7 +233,7 @@ function ResponsiveAppBar() {
                       textAlign="center"
                       href={setting.href}
                       component={"a"}
-                      onClick={(e) => handleCloseUserMenu(e, setting)}
+                      onClick={(e) => handleCloseUserMenu}
                     >
                       {settingNames[setting.name.toUpperCase()]}
                     </Typography>

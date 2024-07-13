@@ -1,7 +1,9 @@
 "use client";
 import { registerValidationSchema } from "@/constants/validations";
 import { useAppSelector } from "@/hooks/useStore";
+import axios from "@/lib/axios";
 import { getValidAuthToken } from "@/lib/cookies";
+import { prisma } from "@/lib/utils/prisma";
 import {
   Box,
   Button,
@@ -30,8 +32,18 @@ function Register() {
       lastName: "",
     },
     validationSchema: registerValidationSchema(dic),
-    onSubmit: (values) => {
-      alert(JSON.stringify(values));
+    onSubmit: async (values) => {
+      await axios.post("/register", values).then(
+        (value) => {
+          console.log(value);
+          alert(JSON.stringify(value.data.userName));
+        },
+        (reject) => {
+          // ? REJECTED
+          if (reject.response.status === 409)
+            formik.setFieldError("userName", "Username is already taken");
+        }
+      );
     },
   });
 
@@ -79,7 +91,7 @@ function Register() {
             onChange={formik.handleChange}
             error={formik.touched.userName && Boolean(formik.errors.userName)}
             helperText={formik.touched.userName && formik.errors.userName}
-            autoComplete="email"
+            autoComplete="off"
             autoFocus
           />
           <TextField
@@ -94,7 +106,7 @@ function Register() {
             helperText={formik.touched.password && formik.errors.password}
             type="password"
             id="password"
-            autoComplete="current-password"
+            autoComplete="new-password"
           />
           <TextField
             margin="normal"
