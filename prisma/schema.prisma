@@ -41,10 +41,10 @@ model Token {
 }
 
 model RefreshToken {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  token     String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String   @db.ObjectId
-  createdAt DateTime @default(now())
-  expiresAt DateTime
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  refreshToken String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String   @db.ObjectId
+  createdAt    DateTime @default(now())
+  expiresAt    DateTime
 }

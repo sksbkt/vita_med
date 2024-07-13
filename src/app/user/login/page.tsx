@@ -2,6 +2,7 @@
 import { loginValidationSchema } from "@/constants/validations";
 import { useAppSelector } from "@/hooks/useStore";
 import { getValidAuthToken } from "@/lib/cookies";
+import { useLoginMutation } from "@/lib/features/authSlice/authApiSlice";
 import { RememberMe } from "@mui/icons-material";
 import {
   Box,
@@ -27,14 +28,24 @@ function Login() {
 
   const { push } = useRouter();
 
+  const [login, { isLoading }] = useLoginMutation();
+
   const formik = useFormik({
     initialValues: {
       userName: "",
       password: "",
     },
     validationSchema: loginValidationSchema(dic),
-    onSubmit: (values) => {
-      alert(JSON.stringify(values));
+    onSubmit: async (values) => {
+      try {
+        const response = await login({
+          userName: values.userName,
+          password: values.password,
+        }).unwrap();
+        if (response) alert(JSON.stringify(response.token));
+      } catch (error: unknown) {
+        console.log("ERROR", error);
+      }
     },
   });
   //   const handleSubmit = (event: HTMLFormElement) => {
