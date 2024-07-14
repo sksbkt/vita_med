@@ -19,7 +19,7 @@ export const authApi = createApi({
       }
     >({
       query: ({ userName, password }) => ({
-        url: "/api/login",
+        url: "/api/auth/login",
         method: "POST",
         body: {
           userName,
@@ -29,7 +29,7 @@ export const authApi = createApi({
     }),
     getAuthData: builder.query<LoginResponseType, { token: string }>({
       query: ({ token }) => ({
-        url: "/api/auth-details",
+        url: "/api/auth/auth-details",
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -43,7 +43,7 @@ export const authApi = createApi({
         firstName,
         lastName,
       }: RegisterPayload) => ({
-        url: "/api/register",
+        url: "/api/auth/register",
         method: "POST",
         body: {
           userName,
