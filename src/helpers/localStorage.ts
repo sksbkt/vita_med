@@ -16,7 +16,7 @@ export function getSettingsFromStorage<T>(key: string): T | null {
   }
 }
 
-export function setSettingsInStorage<T>(state: T, key: string) {
+export function setSettingsInStorage<T>(key: string, state: T) {
   if (typeof window === "undefined") {
     // If we're on the server, log an error or handle differently
     console.error(
@@ -26,6 +26,21 @@ export function setSettingsInStorage<T>(state: T, key: string) {
   }
   try {
     localStorage.setItem(key, JSON.stringify(state));
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export function removeSettingsFromStorage<T>(key: string) {
+  if (typeof window === "undefined") {
+    // If we're on the server, log an error or handle differently
+    console.error(
+      "Attempted to set localStorage in a non-browser environment."
+    );
+    return;
+  }
+  try {
+    localStorage.removeItem(key);
   } catch (e) {
     console.log(e);
   }

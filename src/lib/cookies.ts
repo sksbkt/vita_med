@@ -1,7 +1,5 @@
+import { AUTH_TOKEN } from "@/constants/strings";
 import { deleteCookie, getCookie, setCookie } from "cookies-next";
-
-export const AUTH_TOKEN = "token";
-export const AUTH_REFRESH_TOKEN = "refreshToken";
 
 export const getAuthCookie = (name: string) => {
   const cookie = getCookie(name);
@@ -12,7 +10,7 @@ export const getAuthCookie = (name: string) => {
 // ? GET COOKIES
 // TODO: we must get token from cookie and add it to the state
 export const getValidAuthToken = () => {
-  const token = getAuthCookie("auth_token");
+  const token = getAuthCookie(AUTH_TOKEN);
   const now = new Date();
   const tokenDate = new Date(token || 0);
   return {
@@ -31,10 +29,11 @@ export const setAuthCookie = (token: string, name: string) => {
     // secure: process.env.NODE_ENV === 'production',
   });
 };
-
+//! TODO: cant delete http-only cookie
 // ? DELETE COOKIES
 export const removeCookies = (cookies: string[]) => {
   cookies.forEach((cookie) => {
+    console.log("TRIGGER", cookie);
     deleteCookie(cookie);
   });
 };

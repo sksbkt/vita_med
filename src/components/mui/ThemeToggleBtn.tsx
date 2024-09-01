@@ -17,6 +17,7 @@ function ThemeToggleBtn() {
   }
   useEffect(() => {
     setMode(darkMode ? "Dark" : "Light");
+    // * TODO: INITIAL STATE WILL BE SET HERE
   }, [darkMode]);
 
   return (

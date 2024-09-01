@@ -21,14 +21,6 @@ import { logOut } from "@/lib/features/authSlice/authSlice";
 import { Link } from "@mui/material";
 import { useEffect } from "react";
 
-const pages = ["Products", "Pricing", "About"];
-const settings = [
-  { name: "Profile", href: "/user/profile" },
-  { name: "Account", href: "/user/Account" },
-  { name: "Dashboard", href: "/user/Dashboard" },
-  { name: "Logout", href: "/user/login" },
-];
-
 type pagesType = {
   [key: string]: string;
 };
@@ -39,11 +31,29 @@ type settingsType = {
 function ResponsiveAppBar() {
   const dispatch = useAppDispatch();
   const { dic } = useAppSelector((state) => state.localeSlice);
-  const { token } = useAppSelector((state) => state.authSlice);
+  const { ACCESS_TOKEN } = useAppSelector((state) => state.authSlice);
   const pageNames: pagesType = dic.Pages;
   const settingNames: settingsType = dic.settings;
   const { push } = useRouter();
 
+  const pages = ["Products", "Pricing", "About"];
+  const settings = [
+    {
+      name: "Profile",
+      href: "/user/profile",
+      function: () => {},
+    },
+    { name: "Account", href: "/user/Account", function: () => {} },
+    { name: "Dashboard", href: "/user/Dashboard", function: () => {} },
+    {
+      name: "Logout",
+      href: "",
+      function: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+        dispatch(logOut());
+        e.preventDefault();
+      },
+    },
+  ];
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -133,7 +143,9 @@ function ResponsiveAppBar() {
               {pages.map((page) => (
                 <MenuItem
                   key={page}
-                  onClick={handleCloseNavMenu}
+                  onClick={() => {
+                    handleCloseNavMenu;
+                  }}
                 >
                   <Box onClick={() => push(`/${page}`)}>
                     <Typography textAlign="center">
@@ -195,7 +207,7 @@ function ResponsiveAppBar() {
             <LanguageSelector />
           </Box>
           {/* //* reverse the token ! modifier after development of this part */}
-          {!token ? (
+          {ACCESS_TOKEN ? (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton
@@ -233,7 +245,10 @@ function ResponsiveAppBar() {
                       textAlign="center"
                       href={setting.href}
                       component={"a"}
-                      onClick={(e) => handleCloseUserMenu}
+                      onClick={(e) => {
+                        handleCloseUserMenu;
+                        setting.function(e);
+                      }}
                     >
                       {settingNames[setting.name.toUpperCase()]}
                     </Typography>

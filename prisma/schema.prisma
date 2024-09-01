@@ -38,6 +38,7 @@ model Token {
   userId    String   @db.ObjectId
   createdAt DateTime @default(now())
   expiresAt DateTime
+  expired   Boolean  @default(false)
 }
 
 model RefreshToken {
@@ -47,4 +48,5 @@ model RefreshToken {
   userId       String   @db.ObjectId
   createdAt    DateTime @default(now())
   expiresAt    DateTime
+  expired      Boolean  @default(false)
 }

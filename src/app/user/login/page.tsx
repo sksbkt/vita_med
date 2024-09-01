@@ -1,6 +1,6 @@
 "use client";
 import { loginValidationSchema } from "@/constants/validations";
-import { useAppSelector } from "@/hooks/useStore";
+import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
 import { getValidAuthToken } from "@/lib/cookies";
 import { useLoginMutation } from "@/lib/features/authSlice/authApiSlice";
 import { RememberMe } from "@mui/icons-material";
@@ -18,15 +18,20 @@ import {
 import { Form, useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
-import * as yup from "yup";
-import { string } from "yup";
+import axios, { AxiosError } from "axios";
+import { ENDPOINTS } from "@/constants/strings";
+import { setCredentials } from "@/lib/features/authSlice/authSlice";
+import { LoginResponseType } from "@/types/types";
 
 function Login() {
-  const { token } = getValidAuthToken();
+  // const { token } = getValidAuthToken();
+
+  const { ACCESS_TOKEN } = useAppSelector((state) => state.authSlice);
 
   const { dic } = useAppSelector((state) => state.localeSlice);
 
   const { push } = useRouter();
+  const dispatch = useAppDispatch();
 
   const [login, { isLoading }] = useLoginMutation();
 
@@ -38,13 +43,26 @@ function Login() {
     validationSchema: loginValidationSchema(dic),
     onSubmit: async (values) => {
       try {
-        const response = await login({
-          userName: values.userName,
-          password: values.password,
-        }).unwrap();
-        if (response) alert(JSON.stringify(response.token));
-      } catch (error: unknown) {
+        // const response = await login({
+        //   userName: values.userName,
+        //   password: values.password,
+        // }).unwrap();
+        const response = await axios.post(ENDPOINTS.login, values);
+        if (response.status == 200) {
+          const resString = JSON.stringify(response.data);
+          const responseData: LoginResponseType = JSON.parse(resString);
+          console.log(responseData.ACCESS_TOKEN);
+          dispatch(
+            setCredentials({
+              userName: responseData.userName,
+              id: responseData.id,
+              ACCESS_TOKEN: responseData.ACCESS_TOKEN,
+            })
+          );
+        } else alert(JSON.stringify(response.data.message));
+      } catch (error: any) {
         console.log("ERROR", error);
+        alert(JSON.stringify(error.response.data.message));
       }
     },
   });
@@ -56,9 +74,9 @@ function Login() {
   //       password: data.get("password"),
   //     });
   //   };
-
+  // !TESTING;
   useEffect(() => {
-    if (token) push("/");
+    if (ACCESS_TOKEN) push("/");
   });
 
   return (
@@ -151,6 +169,7 @@ function Login() {
           </Grid>
         </Box>
       </form>
+
       {/* </Box> */}
     </Container>
   );

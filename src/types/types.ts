@@ -12,8 +12,8 @@ export interface ThemeStateType {
 // }
 
 export interface LoginResponseType {
-  token: string;
-  refreshToken: string;
+  ACCESS_TOKEN: string | null;
+  // refreshToken: string;
   userName: string | null;
   id: string;
   // isLoggedIn: boolean;
