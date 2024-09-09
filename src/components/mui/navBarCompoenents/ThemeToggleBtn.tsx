@@ -1,5 +1,5 @@
 "use client";
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, Tooltip } from "@mui/material";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
@@ -30,18 +30,19 @@ function ThemeToggleBtn() {
         // bgcolor: "background.default",
         // color: "text.primary",
         borderRadius: 1,
-        p: 3,
+        // p: 3,
       }}
     >
       {/* //! TESTING */}
-      {mode} mode
-      <IconButton
-        sx={{ ml: 1 }}
-        onClick={toggleDarkMode}
-        color="inherit"
-      >
-        {darkMode ? <Brightness4Icon /> : <Brightness7Icon />}
-      </IconButton>
+      <Tooltip title={`${mode} mode`}>
+        <IconButton
+          sx={{ ml: 1 }}
+          onClick={toggleDarkMode}
+          color="inherit"
+        >
+          {darkMode ? <Brightness4Icon /> : <Brightness7Icon />}
+        </IconButton>
+      </Tooltip>
     </Box>
   );
 }

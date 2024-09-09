@@ -22,7 +22,7 @@ function MuiProvider({ children }: { children: React.ReactNode }) {
 
   const cacheRtl = createCache({
     key: ltrMode ? "muiltr" : "muirtl",
-    stylisPlugins: ltrMode ? [prefixer, rtlPlugin] : [],
+    stylisPlugins: ltrMode ? [] : [prefixer, rtlPlugin],
   });
   useEffect(() => {
     if (typeof window != "undefined") {

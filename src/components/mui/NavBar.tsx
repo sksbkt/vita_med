@@ -13,13 +13,13 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import ThemeToggleBtn from "@/components/mui/ThemeToggleBtn";
-import LanguageSelector from "@/components/mui/LanguageSelector";
+import ThemeToggleBtn from "@/components/mui/navBarCompoenents/ThemeToggleBtn";
+import LanguageSelector from "@/components/mui/navBarCompoenents/LanguageSelector";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
 import { logOut } from "@/lib/features/authSlice/authSlice";
-import { Link } from "@mui/material";
-import { useEffect } from "react";
+import { Link, alpha, styled } from "@mui/material";
+import Search from "@/components/mui/navBarCompoenents/search";
 
 type pagesType = {
   [key: string]: string;
@@ -31,7 +31,7 @@ type settingsType = {
 function ResponsiveAppBar() {
   const dispatch = useAppDispatch();
   const { dic } = useAppSelector((state) => state.localeSlice);
-  const { ACCESS_TOKEN } = useAppSelector((state) => state.authSlice);
+  const { ACCESS_TOKEN, userName } = useAppSelector((state) => state.authSlice);
   const pageNames: pagesType = dic.Pages;
   const settingNames: settingsType = dic.settings;
   const { push } = useRouter();
@@ -182,7 +182,12 @@ function ResponsiveAppBar() {
               LOGO
             </Typography>
           </Link>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box
+            sx={{
+              display: { xs: "none", md: "flex" },
+              pr: "10px",
+            }}
+          >
             {pages.map((page) => (
               <Button
                 key={page}
@@ -196,6 +201,8 @@ function ResponsiveAppBar() {
               </Button>
             ))}
           </Box>
+          <Search />
+          <Box sx={{ flexGrow: 1 }} />
           <Box
             sx={{
               display: "flex",
@@ -215,7 +222,7 @@ function ResponsiveAppBar() {
                   sx={{ p: 0 }}
                 >
                   <Avatar
-                    alt="Remy Sharp"
+                    alt={userName?.toUpperCase() ?? "*"}
                     src="/static/images/avatar/2.jpg"
                   />
                 </IconButton>

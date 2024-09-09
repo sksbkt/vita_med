@@ -15,12 +15,15 @@ const initialState: ThemeStateType = {
 export const themeSlice = createSlice({
   name: "themeSlice",
   initialState:
-    getSettingsFromStorage(themeInitialLocalStorageKey) || initialState,
+    (getSettingsFromStorage(themeInitialLocalStorageKey) as ThemeStateType) ||
+    initialState,
   reducers: {
     setThemeMode: (state, action: PayloadAction<ThemeStateType>) => {
-      state.darkMode = action.payload.darkMode;
-      state.ltrMode = action.payload.ltrMode;
-      setSettingsInStorage(state, themeInitialLocalStorageKey);
+      const { darkMode, ltrMode } = action.payload;
+
+      state.darkMode = darkMode;
+      state.ltrMode = ltrMode;
+      setSettingsInStorage(themeInitialLocalStorageKey, action.payload);
     },
   },
 });

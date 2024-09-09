@@ -1,9 +1,5 @@
-import { PaletteMode, Theme, createTheme } from "@mui/material";
-import {
-  PaletteOptions,
-  dark,
-  light,
-} from "@mui/material/styles/createPalette";
+import { createTheme } from "@mui/material";
+import { PaletteOptions } from "@mui/material/styles/createPalette";
 
 // export function setTheme(themeChange: Theme) {
 //   theme = themeChange;
