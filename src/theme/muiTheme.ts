@@ -32,7 +32,7 @@ const lightPalette: PaletteOptions = {
   },
 };
 
-const darkPalette: PaletteOptions = {
+export const darkPalette: PaletteOptions = {
   mode: "dark",
   primary: {
     main: "#bb86fc",

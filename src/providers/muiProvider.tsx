@@ -9,7 +9,6 @@ import createCache from "@emotion/cache";
 import { prefixer } from "stylis";
 import rtlPlugin from "stylis-plugin-rtl";
 import { getTheme } from "@/theme/muiTheme";
-import NextThemesProvider from "@/providers/next-themes/nextThemesProvider";
 
 function MuiProvider({ children }: { children: React.ReactNode }) {
   const { darkMode, ltrMode } = useAppSelector((state) => state.themeSlice);
@@ -19,6 +18,7 @@ function MuiProvider({ children }: { children: React.ReactNode }) {
   let theme = useMemo(() => {
     return getTheme(darkMode, ltrMode);
   }, [darkMode, ltrMode]);
+  console.log(theme);
 
   const cacheRtl = createCache({
     key: ltrMode ? "muiltr" : "muirtl",
@@ -49,14 +49,7 @@ function MuiProvider({ children }: { children: React.ReactNode }) {
           </AppRouterCacheProvider>
         </ThemeProvider>
       ) : (
-        <NextThemesProvider>
-          <div
-            className="flex items-center justify-center h-screen min-h-screen"
-            dir="ltr"
-          >
-            loading...
-          </div>
-        </NextThemesProvider>
+        <></>
       )}
     </>
   );
