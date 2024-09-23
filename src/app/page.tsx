@@ -1,5 +1,6 @@
 "use client";
 
+import VideoPlayer from "@/components/videoPlayer/VideoPlayer";
 import { Box } from "@mui/material";
 import { useEffect } from "react";
 // import { theme } from "@/theme/muiTheme";
@@ -10,6 +11,8 @@ export default function Home() {
       sx={{
         width: { sx: "40%" },
       }}
-    ></Box>
+    >
+      <VideoPlayer />
+    </Box>
   );
 }

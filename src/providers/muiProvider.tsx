@@ -18,7 +18,6 @@ function MuiProvider({ children }: { children: React.ReactNode }) {
   let theme = useMemo(() => {
     return getTheme(darkMode, ltrMode);
   }, [darkMode, ltrMode]);
-  console.log(theme);
 
   const cacheRtl = createCache({
     key: ltrMode ? "muiltr" : "muirtl",

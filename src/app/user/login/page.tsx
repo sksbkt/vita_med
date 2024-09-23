@@ -129,7 +129,7 @@ function Login() {
             autoComplete="current-password"
           />
 
-          <FormControlLabel
+          {/* <FormControlLabel
             control={
               <Checkbox
                 value="remember"
@@ -137,7 +137,7 @@ function Login() {
               />
             }
             label={dic.REMEMBER_ME}
-          />
+          /> */}
           <Button
             type="submit"
             fullWidth

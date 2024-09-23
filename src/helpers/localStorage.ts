@@ -8,7 +8,6 @@ export function getSettingsFromStorage<T>(key: string): T | null {
   }
   try {
     const serializedState = localStorage.getItem(key);
-    console.log(key, serializedState);
     if (serializedState === null) return null;
 
     return JSON.parse(serializedState);

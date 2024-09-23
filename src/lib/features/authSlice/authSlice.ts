@@ -20,7 +20,11 @@ import {
 } from "@reduxjs/toolkit";
 
 // const initialState: Partial<LoginResponseType> = {};
-const initialState = {};
+const initialState = {
+  ACCESS_TOKEN: "",
+  userName: "",
+  id: "",
+};
 
 const authSlice = createSlice({
   name: "auth",
@@ -28,6 +32,7 @@ const authSlice = createSlice({
     ({
       ACCESS_TOKEN: getSettingsFromStorage("ACCESS_TOKEN"),
       userName: getSettingsFromStorage("userName"),
+      id: getSettingsFromStorage("id"),
     } as Partial<LoginResponseType>) ?? initialState,
   reducers: {
     setCredentials: (state, action: PayloadAction<LoginResponseType>) => {
@@ -36,6 +41,8 @@ const authSlice = createSlice({
       if (userName) setSettingsInStorage("userName", userName);
       state.ACCESS_TOKEN = ACCESS_TOKEN;
       if (ACCESS_TOKEN) setSettingsInStorage("ACCESS_TOKEN", ACCESS_TOKEN);
+      state.id = id;
+      if (id) setSettingsInStorage("id", id);
     },
     logOut: (state) => {
       console.log("logout");

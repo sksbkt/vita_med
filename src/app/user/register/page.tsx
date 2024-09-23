@@ -33,7 +33,7 @@ function Register() {
     },
     validationSchema: registerValidationSchema(dic),
     onSubmit: async (values) => {
-      await axios.post("/register", values).then(
+      await axios.post("/auth/register", values).then(
         (value) => {
           console.log(value);
           alert(JSON.stringify(value.data.userName));
