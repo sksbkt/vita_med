@@ -19,7 +19,7 @@ function VideoPlayer() {
   const [videoContainerClass, setVideoContainerClass] = useState(
     "video-container paused"
   );
-  const playToggle = () => {
+  const togglePlay = () => {
     if (videoRef.current != null) {
       if (videoRef.current.paused) {
         videoRef.current.play();
@@ -30,30 +30,51 @@ function VideoPlayer() {
       }
     }
   };
+  const toggleMiniPlayer = () => {
+    if (videoContainerRef.current) {
+      if (videoContainerRef.current.classList.contains("mini-player")) {
+        document.exitPictureInPicture();
+      } else {
+        videoRef.current?.requestPictureInPicture();
+      }
+    }
+  };
   const toggleTheater = () => {
     if (videoContainerRef.current) {
       videoContainerRef.current.classList.toggle("theater");
-      console.log("TOGGLED");
     }
   };
   const toggleFullScreen = () => {
     if (videoContainerRef.current) {
-      if (!document.fullscreenElement) {
-        videoContainerRef.current.classList.toggle("fullscreen");
+      if (document.fullscreenElement == null) {
         videoContainerRef.current.requestFullscreen();
       } else {
         document.exitFullscreen();
       }
     }
   };
-  const handlePlayerStatus = () => {
+  const handleFullScreenStatus = () => {
+    if (videoContainerRef.current)
+      // ? like this we are adding the full-screen only if a fullscreen element exists
+      videoContainerRef.current.classList.toggle(
+        "full-screen",
+        document.fullscreenElement ? true : false
+      );
+  };
+  const handlePlayerStatus = (e: Event) => {
     if (videoRef.current) {
-      videoContainerRef.current?.classList.toggle("paused");
-      console.log(videoRef.current.paused);
+      // ? like this we are adding the paused only if a videoRef is paused
+      videoContainerRef.current?.classList.toggle(
+        "paused",
+        videoRef.current.paused
+      );
     }
   };
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      const tagName = document.activeElement?.tagName.toLowerCase();
+      // ? like this while we are interacting with an input element we wont interrupt with our hotkeys
+      if (tagName === "input" || tagName === "button") return;
       if (videoRef.current) {
         const video = videoRef.current;
         const keyCode = e.code;
@@ -61,21 +82,24 @@ function VideoPlayer() {
         switch (keyCode.toLowerCase()) {
           case "arrowdown":
             setVolume((prev) => (prev <= 0.1 ? (prev = 0) : prev - 0.1));
-            console.log("Volume down");
             break;
           case "arrowup":
             setVolume((prev) => (prev < 0.9 ? prev + 0.1 : 1));
-            console.log("Volume up");
             break;
-          case "keyk":
+          // case "keyk":
           case "space":
-            console.log("pause/play");
+            togglePlay();
             break;
           case "keyf":
             toggleFullScreen();
             break;
           case "keyi":
+            toggleMiniPlayer();
+            break;
+          case "keyt":
             toggleTheater();
+            break;
+          case "escape":
             break;
           default:
             console.log(keyCode);
@@ -86,17 +110,28 @@ function VideoPlayer() {
 
     videoRef.current?.addEventListener("play", handlePlayerStatus);
     videoRef.current?.addEventListener("pause", handlePlayerStatus);
+
     document.addEventListener("keydown", handleKeyDown);
+
+    document.addEventListener("fullscreenchange", handleFullScreenStatus);
+
+    videoRef.current?.addEventListener("enterpictureinpicture", () => {
+      videoContainerRef.current?.classList.add("mini-player");
+    });
+    videoRef.current?.addEventListener("leavepictureinpicture", () => {
+      videoContainerRef.current?.classList.remove("mini-player");
+    });
+
     return () => {
       videoRef.current?.removeEventListener("play", handlePlayerStatus);
       videoRef.current?.removeEventListener("pause", handlePlayerStatus);
       document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("fullscreenchange", handleFullScreenStatus);
     };
   }, []);
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.volume = volume;
-      console.log("Volume", videoRef.current.volume);
     }
   }, [volume]);
   return (
@@ -108,24 +143,28 @@ function VideoPlayer() {
         <div className="timeline-container"></div>
         <div className="controls">
           <button
-            className="play-pause-btn play-icon"
-            onClick={playToggle}
+            className="play-pause-btn"
+            onClick={togglePlay}
           >
             <PlayIcon />
           </button>
+
           <button
-            className="play-pause-btn paused-icon"
-            onClick={playToggle}
+            className="mini-player-btn"
+            onClick={toggleMiniPlayer}
           >
-            <PauseIcon />
-          </button>
-          <button className="mini-player-btn">
             <MiniPlayerIcon />
           </button>
-          <button className="theater-btn">
+          <button
+            className="theater-btn"
+            onClick={toggleTheater}
+          >
             <TheaterIcon />
           </button>
-          <button className="full-screen-btn">
+          <button
+            className="full-screen-btn"
+            onClick={toggleFullScreen}
+          >
             <FullScreenIcon />
           </button>
         </div>

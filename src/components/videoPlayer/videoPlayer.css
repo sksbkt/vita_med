@@ -15,8 +15,23 @@ video::-webkit-media-controls {
   max-width: initial;
   width: 100%;
 }
+.video-container.full-screen .theater-btn,
+.video-container.full-screen .mini-player-btn,
+.video-container.full-screen .open {
+  display: none;
+}
+.video-container:not(.full-screen) .close {
+  display: none;
+}
+
 .video-container.theater {
   max-height: 90vh;
+}
+.video-container.theater .tall {
+  display: none;
+}
+.video-container:not(.theater) .wide {
+  display: none;
 }
 .video-container.full-screen {
   max-height: 100vh;
@@ -76,7 +91,7 @@ video::-webkit-media-controls {
 .play-icon {
   display: block;
 }
-.video-container.paused .paused-icon {
+.video-container.paused .pause-icon {
   display: none;
 }
 .video-container:not(.paused) .play-icon {

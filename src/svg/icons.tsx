@@ -1,24 +1,24 @@
 export const PlayIcon = () => (
-  <svg viewBox="0 0 36 36">
-    <defs>
+  <g>
+    <svg
+      className="play-icon"
+      viewBox="0 0 24 24"
+    >
       <path
-        d="M 12,26 18.5,22 18.5,14 12,10 z M 18.5,22 25,18 25,18 18.5,14 z"
-        id="ytp-id-891"
-        fill="#FFFFFF"
-      ></path>
-    </defs>
-    <g
-      stroke="#000000"
-      fill="none"
-      stroke-width="2px"
-      stroke-opacity="0.15"
-    ></g>
-    <path
-      d="M 12,26 18.5,22 18.5,14 12,10 z M 18.5,22 25,18 25,18 18.5,14 z"
-      id="ytp-id-891"
-      fill="#FFFFFF"
-    ></path>
-  </svg>
+        fill="currentColor"
+        d="M8,5.14V19.14L19,12.14L8,5.14Z"
+      />
+    </svg>
+    <svg
+      className="pause-icon"
+      viewBox="0 0 24 24"
+    >
+      <path
+        fill="currentColor"
+        d="M14,19H18V5H14M6,19H10V5H6V19Z"
+      />
+    </svg>
+  </g>
 );
 
 export const PauseIcon = () => (
@@ -68,105 +68,47 @@ export const MiniPlayerIcon = () => (
 );
 
 export const TheaterIcon = () => (
-  <svg viewBox="0 0 36 36">
-    <defs>
+  <g>
+    <svg
+      className="tall"
+      viewBox="0 0 24 24"
+    >
       <path
-        d="m 26,13 0,10 -16,0 0,-10 z m -14,2 12,0 0,6 -12,0 0,-6 z"
-        fill="#FFFFFF"
-        fill-rule="evenodd"
-        id="ytp-id-504"
-      ></path>
-    </defs>
-    <g
-      stroke="#000000"
-      fill="none"
-      stroke-width="2px"
-      stroke-opacity="0.15"
-    ></g>
-    <path
-      d="m 26,13 0,10 -16,0 0,-10 z m -14,2 12,0 0,6 -12,0 0,-6 z"
-      fill="#FFFFFF"
-      fill-rule="evenodd"
-      id="ytp-id-504"
-    ></path>
-  </svg>
+        fill="currentColor"
+        d="M19 6H5c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 10H5V8h14v8z"
+      />
+    </svg>
+    <svg
+      className="wide"
+      viewBox="0 0 24 24"
+    >
+      <path
+        fill="currentColor"
+        d="M19 7H5c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm0 8H5V9h14v6z"
+      />
+    </svg>
+  </g>
 );
 
 export const FullScreenIcon = () => (
-  <svg viewBox="0 0 36 36">
-    <defs>
+  <g>
+    <svg
+      className="open"
+      viewBox="0 0 24 24"
+    >
       <path
-        d="m 10,16 2,0 0,-4 4,0 0,-2 L 10,10 l 0,6 0,0 z"
-        id="ytp-id-18"
-        fill="#FFFFFF"
-      ></path>
+        fill="currentColor"
+        d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"
+      />
+    </svg>
+    <svg
+      className="close"
+      viewBox="0 0 24 24"
+    >
       <path
-        d="m 20,10 0,2 4,0 0,4 2,0 L 26,10 l -6,0 0,0 z"
-        id="ytp-id-19"
-        fill="#FFFFFF"
-      ></path>
-      <path
-        d="m 24,24 -4,0 0,2 L 26,26 l 0,-6 -2,0 0,4 0,0 z"
-        id="ytp-id-20"
-        fill="#FFFFFF"
-      ></path>
-      <path
-        d="M 12,20 10,20 10,26 l 6,0 0,-2 -4,0 0,-4 0,0 z"
-        id="ytp-id-21"
-        fill="#FFFFFF"
-      ></path>
-    </defs>
-    <g>
-      <g
-        stroke="#000000"
-        fill="none"
-        stroke-width="2px"
-        stroke-opacity="0.15"
-      ></g>
-      <path
-        d="m 10,16 2,0 0,-4 4,0 0,-2 L 10,10 l 0,6 0,0 z"
-        id="ytp-id-18"
-        fill="#FFFFFF"
-      ></path>
-    </g>
-    <g>
-      <g
-        stroke="#000000"
-        fill="none"
-        stroke-width="2px"
-        stroke-opacity="0.15"
-      ></g>
-      <path
-        d="m 20,10 0,2 4,0 0,4 2,0 L 26,10 l -6,0 0,0 z"
-        id="ytp-id-19"
-        fill="#FFFFFF"
-      ></path>
-    </g>
-    <g>
-      <g
-        stroke="#000000"
-        fill="none"
-        stroke-width="2px"
-        stroke-opacity="0.15"
-      ></g>
-      <path
-        d="m 24,24 -4,0 0,2 L 26,26 l 0,-6 -2,0 0,4 0,0 z"
-        id="ytp-id-20"
-        fill="#FFFFFF"
-      ></path>
-    </g>
-    <g>
-      <g
-        stroke="#000000"
-        fill="none"
-        stroke-width="2px"
-        stroke-opacity="0.15"
-      ></g>
-      <path
-        d="M 12,20 10,20 10,26 l 6,0 0,-2 -4,0 0,-4 0,0 z"
-        id="ytp-id-21"
-        fill="#FFFFFF"
-      ></path>
-    </g>
-  </svg>
+        fill="currentColor"
+        d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"
+      />
+    </svg>
+  </g>
 );
