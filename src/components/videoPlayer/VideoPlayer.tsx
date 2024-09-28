@@ -6,6 +6,7 @@ import {
   PauseIcon,
   PlayIcon,
   TheaterIcon,
+  VolumeIcon,
 } from "@/svg/icons";
 
 function VideoPlayer() {
@@ -68,6 +69,16 @@ function VideoPlayer() {
         "paused",
         videoRef.current.paused
       );
+    }
+  };
+  const volumeLevel = () => {
+    switch (true) {
+      case volume > 0.4 && volume <= 1:
+        return "high";
+      case volume > 0 && volume <= 0.4:
+        return "low";
+      default:
+        return "muted";
     }
   };
   useEffect(() => {
@@ -138,6 +149,7 @@ function VideoPlayer() {
     <div
       ref={videoContainerRef}
       className={videoContainerClass}
+      data-volume-level={volumeLevel()}
     >
       <div className="video-controls-container">
         <div className="timeline-container"></div>
@@ -148,6 +160,31 @@ function VideoPlayer() {
           >
             <PlayIcon />
           </button>
+          <div className="volume-container">
+            <button
+              className="mute-btn"
+              onClick={togglePlay}
+            >
+              <VolumeIcon />
+            </button>
+            <input
+              value={volume}
+              className="volume-slider"
+              style={{
+                height: 5,
+                background: `linear-gradient(
+                to right,
+                rgb(255, 255, 255) ${100 * volume}%,
+                rgba(255, 255, 255, 0.11) ${100 * volume}%
+              )`,
+              }}
+              type="range"
+              min={0}
+              max={1}
+              step={0.1}
+              onChange={(value) => setVolume(Number(value.currentTarget.value))}
+            />
+          </div>
 
           <button
             className="mini-player-btn"

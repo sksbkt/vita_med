@@ -108,3 +108,53 @@ video::-webkit-media-controls {
 video {
   width: 100%;
 }
+
+.volume-high-icon,
+.volume-low-icon,
+.volume-muted-icon {
+  display: none;
+}
+
+.video-container[data-volume-level="high"] .volume-high-icon {
+  display: block;
+}
+
+.video-container[data-volume-level="low"] .volume-low-icon {
+  display: block;
+}
+
+.video-container[data-volume-level="muted"] .volume-muted-icon {
+  display: block;
+}
+
+.volume-container {
+  display: flex;
+  align-items: center;
+}
+
+.volume-slider {
+  width: 0;
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: width 150ms ease-in-out, transform 150ms ease-in-out;
+}
+.volume-slider {
+  -webkit-appearance: none; /* Remove default styling in WebKit browsers */
+  background: #dddddd00; /* Track background */
+  border-radius: 5px;
+  outline: none;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Remove default styling */
+  width: 12px; /* Thumb width */
+  height: 12px; /* Thumb height */
+  background: #ffffff; /* Thumb color */
+  cursor: pointer; /* Pointer on hover */
+  border-radius: 50%; /* Round thumb */
+}
+.volume-container:hover .volume-slider,
+.volume-slider:focus-within {
+  width: 100px;
+  transform: scaleX(1);
+}
