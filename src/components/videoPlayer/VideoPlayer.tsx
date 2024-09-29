@@ -14,7 +14,6 @@ function VideoPlayer() {
   const videoContainerRef = useRef<HTMLDivElement>(null);
 
   const [volume, setVolume] = useState(1);
-
   const [isPlaying, setIsPlaying] = useState(false);
 
   const [videoContainerClass, setVideoContainerClass] = useState(
@@ -69,6 +68,24 @@ function VideoPlayer() {
         "paused",
         videoRef.current.paused
       );
+    }
+  };
+  const toggleMute = () => {
+    if (videoRef.current) {
+      const isMuted = videoRef.current.muted;
+      videoRef.current.muted = !isMuted;
+      if (videoContainerRef.current) {
+        videoContainerRef.current.dataset.volumeLevel = videoRef.current.muted
+          ? "muted"
+          : volumeLevel();
+      }
+      console.log(videoRef.current.muted);
+    }
+  };
+  const handleVolume = (value: number) => {
+    setVolume(value);
+    if (videoContainerRef.current) {
+      videoContainerRef.current.dataset.volumeLevel = volumeLevel();
     }
   };
   const volumeLevel = () => {
@@ -144,12 +161,15 @@ function VideoPlayer() {
     if (videoRef.current) {
       videoRef.current.volume = volume;
     }
+    if (videoContainerRef.current) {
+      videoContainerRef.current.dataset.volumeLevel = volumeLevel();
+    }
   }, [volume]);
   return (
     <div
       ref={videoContainerRef}
       className={videoContainerClass}
-      data-volume-level={volumeLevel()}
+      // data-volume-level={volumeLevel()}
     >
       <div className="video-controls-container">
         <div className="timeline-container"></div>
@@ -163,7 +183,7 @@ function VideoPlayer() {
           <div className="volume-container">
             <button
               className="mute-btn"
-              onClick={togglePlay}
+              onClick={toggleMute}
             >
               <VolumeIcon />
             </button>
@@ -182,7 +202,9 @@ function VideoPlayer() {
               min={0}
               max={1}
               step={0.1}
-              onChange={(value) => setVolume(Number(value.currentTarget.value))}
+              onChange={(value) =>
+                handleVolume(Number(value.currentTarget.value))
+              }
             />
           </div>
 
