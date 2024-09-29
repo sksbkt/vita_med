@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./videoPlayer.css";
 import {
+  Captions,
   FullScreenIcon,
   MiniPlayerIcon,
   PauseIcon,
@@ -8,6 +9,7 @@ import {
   TheaterIcon,
   VolumeIcon,
 } from "@/svg/icons";
+import { formatDuration } from "@/helpers/time";
 
 function VideoPlayer() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -15,7 +17,9 @@ function VideoPlayer() {
 
   const [volume, setVolume] = useState(1);
   const [isPlaying, setIsPlaying] = useState(false);
-
+  const [isCaptions, setIsCaptions] = useState(false);
+  const [duration, setDuration] = useState<number | undefined>(undefined);
+  const [currentTime, setCurrentTime] = useState<number | undefined>(undefined);
   const [videoContainerClass, setVideoContainerClass] = useState(
     "video-container paused"
   );
@@ -29,6 +33,9 @@ function VideoPlayer() {
         // setVideoContainerClass((prev) => prev + " paused");
       }
     }
+  };
+  const toggleCaptions = () => {
+    setIsCaptions((prev) => !prev);
   };
   const toggleMiniPlayer = () => {
     if (videoContainerRef.current) {
@@ -98,6 +105,15 @@ function VideoPlayer() {
         return "muted";
     }
   };
+  const handleTimeUpdate = () => {
+    if (videoRef.current) {
+      setCurrentTime(videoRef.current.currentTime);
+    }
+  };
+  const skip = (duration: number) => {
+    if (videoRef.current) videoRef.current.currentTime += duration;
+  };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const tagName = document.activeElement?.tagName.toLowerCase();
@@ -118,6 +134,9 @@ function VideoPlayer() {
           case "space":
             togglePlay();
             break;
+          case "keyc":
+            toggleCaptions();
+            break;
           case "keyf":
             toggleFullScreen();
             break;
@@ -127,6 +146,14 @@ function VideoPlayer() {
           case "keyt":
             toggleTheater();
             break;
+          case "arrowleft":
+          case "keyj":
+            skip(-5);
+            break;
+          case "arrowright":
+          case "keyl":
+            skip(5);
+            break;
           case "escape":
             break;
           default:
@@ -135,7 +162,13 @@ function VideoPlayer() {
         }
       }
     };
-
+    if (videoRef.current) {
+      videoRef.current.onloadedmetadata = () => {
+        setDuration(videoRef.current!.duration);
+      };
+      // ? captions: disabled by default
+      videoRef.current.textTracks[0].mode = "hidden";
+    }
     videoRef.current?.addEventListener("play", handlePlayerStatus);
     videoRef.current?.addEventListener("pause", handlePlayerStatus);
 
@@ -165,6 +198,14 @@ function VideoPlayer() {
       videoContainerRef.current.dataset.volumeLevel = volumeLevel();
     }
   }, [volume]);
+  useEffect(() => {
+    if (videoContainerRef.current) {
+      videoContainerRef.current.classList.toggle("captions", isCaptions);
+      if (videoRef.current) {
+        videoRef.current.textTracks[0].mode = isCaptions ? "showing" : "hidden";
+      }
+    }
+  }, [isCaptions]);
   return (
     <div
       ref={videoContainerRef}
@@ -207,7 +248,18 @@ function VideoPlayer() {
               }
             />
           </div>
-
+          <div className="duration-container">
+            <div className="current-time">
+              {formatDuration(currentTime ?? 0)}
+            </div>
+            /<div className="total-time">{formatDuration(duration ?? 0)}</div>
+          </div>
+          <button
+            className="captions-btn"
+            onClick={toggleCaptions}
+          >
+            <Captions />
+          </button>
           <button
             className="mini-player-btn"
             onClick={toggleMiniPlayer}
@@ -231,7 +283,16 @@ function VideoPlayer() {
       <video
         ref={videoRef}
         src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
-      />
+        onTimeUpdate={handleTimeUpdate}
+        onClick={togglePlay}
+      >
+        <track
+          kind="captions"
+          srcLang="en"
+          src="/assets/test_subs.vtt"
+          default
+        />
+      </video>
     </div>
   );
 }
