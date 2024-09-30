@@ -14,7 +14,7 @@ import { formatDuration } from "@/helpers/time";
 function VideoPlayer() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
-
+  const speedBtnRef = useRef<HTMLButtonElement>(null);
   const [volume, setVolume] = useState(1);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isCaptions, setIsCaptions] = useState(false);
@@ -36,6 +36,17 @@ function VideoPlayer() {
   };
   const toggleCaptions = () => {
     setIsCaptions((prev) => !prev);
+  };
+
+  const togglePlayBackSpeed = () => {
+    if (videoRef.current) {
+      let newPlayBackRate = videoRef.current.playbackRate + 0.25;
+      if (newPlayBackRate > 2) newPlayBackRate = 0.25;
+      videoRef.current.playbackRate = newPlayBackRate;
+      if (speedBtnRef.current) {
+        speedBtnRef.current.textContent = `${newPlayBackRate}x`;
+      }
+    }
   };
   const toggleMiniPlayer = () => {
     if (videoContainerRef.current) {
@@ -212,8 +223,14 @@ function VideoPlayer() {
       className={videoContainerClass}
       // data-volume-level={volumeLevel()}
     >
+      <img className="thumbnail-img" />
       <div className="video-controls-container">
-        <div className="timeline-container"></div>
+        <div className="timeline-container">
+          <div className="timeline">
+            <img className="preview-img" />
+            <div className="thumb-indicator"></div>
+          </div>
+        </div>
         <div className="controls">
           <button
             className="play-pause-btn"
@@ -261,6 +278,13 @@ function VideoPlayer() {
             <Captions />
           </button>
           <button
+            ref={speedBtnRef}
+            className="speed-btn wide-btn"
+            onClick={togglePlayBackSpeed}
+          >
+            1x
+          </button>
+          <button
             className="mini-player-btn"
             onClick={toggleMiniPlayer}
           >
@@ -282,7 +306,7 @@ function VideoPlayer() {
       </div>
       <video
         ref={videoRef}
-        src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+        src="/videos/ForBiggerJoyrides.mp4"
         onTimeUpdate={handleTimeUpdate}
         onClick={togglePlay}
       >
