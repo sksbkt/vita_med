@@ -196,7 +196,7 @@ video {
   left: 0;
   top: 0;
   bottom: 0;
-  right: calc(100% - var(--preview-progress) * 100%);
+  right: calc(100% - var(--preview-position) * 100%);
   background-color: rgb(150, 150, 150);
   display: none;
 }
@@ -230,7 +230,7 @@ video {
   aspect-ratio: 16/9;
   top: -1rem;
   transform: translate(-50%, -100%);
-  left: calc(var(--progress-position) * 100%);
+  left: calc(var(--preview-position) * 100%);
   border-radius: 0.25rem;
   border: 2px solid white;
   display: none;
@@ -258,4 +258,11 @@ video {
 
 .thumbnail-img {
   position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
 }

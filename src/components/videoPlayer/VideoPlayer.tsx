@@ -9,11 +9,14 @@ import {
   TheaterIcon,
   VolumeIcon,
 } from "@/svg/icons";
-import { formatDuration } from "@/helpers/time";
+import { formatDuration, minDigit } from "@/helpers/time";
 
 function VideoPlayer() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
+  const previewImgRef = useRef<HTMLImageElement>(null);
+  const thumbnailImgRef = useRef<HTMLImageElement>(null);
+  const TimeLineContainerRef = useRef<HTMLDivElement>(null);
   const speedBtnRef = useRef<HTMLButtonElement>(null);
   const [volume, setVolume] = useState(1);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -125,6 +128,38 @@ function VideoPlayer() {
     if (videoRef.current) videoRef.current.currentTime += duration;
   };
 
+  const handleTimeLineUpdate = (e: MouseEvent) => {
+    if (TimeLineContainerRef.current) {
+      const rect = TimeLineContainerRef.current.getBoundingClientRect();
+      const percent =
+        Math.min(Math.max(0, e.clientX - rect.x), rect.width) / rect.width;
+      const previewImgNumber = Math.max(
+        0,
+        Math.floor(
+          percent * videoRef.current!.duration
+          // ? set number of seconds that you are using for preview images splits
+          // / 10
+        )
+      );
+      const previewImgSrc = `/videos/previewImgs/out_${minDigit(
+        previewImgNumber,
+        4
+      )}.png`;
+
+      TimeLineContainerRef.current.style.setProperty(
+        "--preview-position",
+        percent.toString()
+      );
+
+      if (thumbnailImgRef.current) {
+        thumbnailImgRef.current.src = previewImgSrc;
+      }
+      if (previewImgRef.current) {
+        previewImgRef.current.src = previewImgSrc;
+      }
+    }
+  };
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const tagName = document.activeElement?.tagName.toLowerCase();
@@ -183,6 +218,11 @@ function VideoPlayer() {
     videoRef.current?.addEventListener("play", handlePlayerStatus);
     videoRef.current?.addEventListener("pause", handlePlayerStatus);
 
+    TimeLineContainerRef.current?.addEventListener(
+      "mousemove",
+      handleTimeLineUpdate
+    );
+
     document.addEventListener("keydown", handleKeyDown);
 
     document.addEventListener("fullscreenchange", handleFullScreenStatus);
@@ -223,11 +263,20 @@ function VideoPlayer() {
       className={videoContainerClass}
       // data-volume-level={volumeLevel()}
     >
-      <img className="thumbnail-img" />
+      <img
+        className="thumbnail-img"
+        ref={thumbnailImgRef}
+      />
       <div className="video-controls-container">
-        <div className="timeline-container">
+        <div
+          className="timeline-container"
+          ref={TimeLineContainerRef}
+        >
           <div className="timeline">
-            <img className="preview-img" />
+            <img
+              className="preview-img"
+              ref={previewImgRef}
+            />
             <div className="thumb-indicator"></div>
           </div>
         </div>
