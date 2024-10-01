@@ -18,9 +18,13 @@ function VideoPlayer() {
   const thumbnailImgRef = useRef<HTMLImageElement>(null);
   const TimeLineContainerRef = useRef<HTMLDivElement>(null);
   const speedBtnRef = useRef<HTMLButtonElement>(null);
+
   const [volume, setVolume] = useState(1);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isCaptions, setIsCaptions] = useState(false);
+  const [isScrubbing, setIsScrubbing] = useState(false);
+  const [wasPaused, setWasPaused] = useState(false);
+
   const [duration, setDuration] = useState<number | undefined>(undefined);
   const [currentTime, setCurrentTime] = useState<number | undefined>(undefined);
   const [videoContainerClass, setVideoContainerClass] = useState(
@@ -30,9 +34,11 @@ function VideoPlayer() {
     if (videoRef.current != null) {
       if (videoRef.current.paused) {
         videoRef.current.play();
+        setWasPaused(false);
         // setVideoContainerClass("video-container");
       } else {
         videoRef.current.pause();
+        setWasPaused(true);
         // setVideoContainerClass((prev) => prev + " paused");
       }
     }
@@ -119,15 +125,55 @@ function VideoPlayer() {
         return "muted";
     }
   };
+
   const handleTimeUpdate = () => {
     if (videoRef.current) {
       setCurrentTime(videoRef.current.currentTime);
+    }
+    if (TimeLineContainerRef.current) {
+      if (videoRef.current) {
+        const percent =
+          videoRef.current!.currentTime / videoRef.current?.duration;
+        TimeLineContainerRef.current.style.setProperty(
+          "--progress-position",
+          percent.toString()
+        );
+      }
     }
   };
   const skip = (duration: number) => {
     if (videoRef.current) videoRef.current.currentTime += duration;
   };
+  const toggleScrubbing = (e: MouseEvent) => {
+    e.preventDefault();
+    if (TimeLineContainerRef.current) {
+      const rect = TimeLineContainerRef.current.getBoundingClientRect();
+      const percent =
+        Math.min(Math.max(0, e.clientX - rect.x), rect.width) / rect.width;
 
+      // setIsScrubbing(e.button === 0);
+      if (videoContainerRef.current) {
+        videoContainerRef.current.classList.toggle("scrubbing", isScrubbing);
+      }
+      console.log(isScrubbing, e.button);
+
+      if (videoRef.current) {
+        if (isScrubbing) {
+          videoRef.current.pause();
+          setWasPaused(videoRef.current.paused);
+          console.log("IS SCRUBING");
+        } else {
+          videoRef.current.currentTime = percent * videoRef.current.duration;
+          console.log("IS NOT SCRUBING");
+
+          if (wasPaused) videoRef.current.play();
+        }
+      }
+    }
+  };
+  // useEffect(() => {
+  //   console.log("SCRUBBING", isScrubbing);
+  // }, [isScrubbing]);
   const handleTimeLineUpdate = (e: MouseEvent) => {
     if (TimeLineContainerRef.current) {
       const rect = TimeLineContainerRef.current.getBoundingClientRect();
@@ -151,16 +197,26 @@ function VideoPlayer() {
         percent.toString()
       );
 
-      if (thumbnailImgRef.current) {
-        thumbnailImgRef.current.src = previewImgSrc;
-      }
       if (previewImgRef.current) {
         previewImgRef.current.src = previewImgSrc;
+      }
+      if (isScrubbing) {
+        e.preventDefault();
+        if (thumbnailImgRef.current) {
+          thumbnailImgRef.current.src = previewImgSrc;
+        }
+
+        TimeLineContainerRef.current.style.setProperty(
+          "--progress-position",
+          percent.toString()
+        );
       }
     }
   };
 
   useEffect(() => {
+    console.log("start");
+
     const handleKeyDown = (e: KeyboardEvent) => {
       const tagName = document.activeElement?.tagName.toLowerCase();
       // ? like this while we are interacting with an input element we wont interrupt with our hotkeys
@@ -203,7 +259,6 @@ function VideoPlayer() {
           case "escape":
             break;
           default:
-            console.log(keyCode);
             break;
         }
       }
@@ -227,6 +282,16 @@ function VideoPlayer() {
 
     document.addEventListener("fullscreenchange", handleFullScreenStatus);
 
+    TimeLineContainerRef.current?.addEventListener(
+      "mousedown",
+      toggleScrubbing
+    );
+    document.addEventListener("mouseup", (e) => {
+      setIsScrubbing(false);
+
+      if (isScrubbing) toggleScrubbing(e);
+    });
+
     videoRef.current?.addEventListener("enterpictureinpicture", () => {
       videoContainerRef.current?.classList.add("mini-player");
     });
@@ -239,8 +304,15 @@ function VideoPlayer() {
       videoRef.current?.removeEventListener("pause", handlePlayerStatus);
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("fullscreenchange", handleFullScreenStatus);
+      TimeLineContainerRef.current?.removeEventListener(
+        "mousedown",
+        toggleScrubbing
+      );
+      document.removeEventListener("mouseup", toggleScrubbing);
     };
   }, []);
+  useEffect(() => {}, [isScrubbing]);
+
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.volume = volume;
