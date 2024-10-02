@@ -146,34 +146,35 @@ function VideoPlayer() {
   };
   const toggleScrubbing = (e: MouseEvent) => {
     e.preventDefault();
-    if (TimeLineContainerRef.current) {
-      const rect = TimeLineContainerRef.current.getBoundingClientRect();
+    const timeLine = TimeLineContainerRef.current;
+    if (timeLine) {
+      const rect = timeLine.getBoundingClientRect();
       const percent =
         Math.min(Math.max(0, e.clientX - rect.x), rect.width) / rect.width;
 
-      // setIsScrubbing(e.button === 0);
-      if (videoContainerRef.current) {
-        videoContainerRef.current.classList.toggle("scrubbing", isScrubbing);
+      setIsScrubbing(e.button === 0);
+      const videoContainer = videoContainerRef.current;
+      if (videoContainer) {
+        videoContainer.classList.toggle("scrubbing", isScrubbing);
       }
       console.log(isScrubbing, e.button);
-
-      if (videoRef.current) {
+      const video = videoRef.current;
+      if (video) {
         if (isScrubbing) {
-          videoRef.current.pause();
-          setWasPaused(videoRef.current.paused);
+          video.pause();
+          setWasPaused(video.paused);
           console.log("IS SCRUBING");
         } else {
-          videoRef.current.currentTime = percent * videoRef.current.duration;
+          video.currentTime = percent * video.duration;
           console.log("IS NOT SCRUBING");
 
-          if (wasPaused) videoRef.current.play();
+          if (wasPaused) video.play();
         }
       }
     }
+    handleTimeLineUpdate(e);
   };
-  // useEffect(() => {
-  //   console.log("SCRUBBING", isScrubbing);
-  // }, [isScrubbing]);
+
   const handleTimeLineUpdate = (e: MouseEvent) => {
     if (TimeLineContainerRef.current) {
       const rect = TimeLineContainerRef.current.getBoundingClientRect();
@@ -222,7 +223,6 @@ function VideoPlayer() {
       // ? like this while we are interacting with an input element we wont interrupt with our hotkeys
       if (tagName === "input" || tagName === "button") return;
       if (videoRef.current) {
-        const video = videoRef.current;
         const keyCode = e.code;
 
         switch (keyCode.toLowerCase()) {
@@ -311,7 +311,6 @@ function VideoPlayer() {
       document.removeEventListener("mouseup", toggleScrubbing);
     };
   }, []);
-  useEffect(() => {}, [isScrubbing]);
 
   useEffect(() => {
     if (videoRef.current) {
