@@ -14,7 +14,9 @@ import { formatDuration, minDigit } from "@/helpers/time";
 function VideoPlayer() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
+  const previewImgRef = useRef<HTMLImageElement>(null);
   const thumbnailImgRef = useRef<HTMLImageElement>(null);
+  const TimeLineContainerRef = useRef<HTMLDivElement>(null);
   const speedBtnRef = useRef<HTMLButtonElement>(null);
 
   const [volume, setVolume] = useState(1);
@@ -23,9 +25,8 @@ function VideoPlayer() {
   const [isScrubbing, setIsScrubbing] = useState(false);
   const [wasPaused, setWasPaused] = useState(false);
 
-  const [duration, setDuration] = useState<number>(0);
-  const [currentTime, setCurrentTime] = useState<number>(0);
-  // const [currentPercent, setCurrentPercent] = useState<number>(0);
+  const [duration, setDuration] = useState<number | undefined>(undefined);
+  const [currentTime, setCurrentTime] = useState<number | undefined>(undefined);
   const [videoContainerClass, setVideoContainerClass] = useState(
     "video-container paused"
   );
@@ -41,24 +42,6 @@ function VideoPlayer() {
         // setVideoContainerClass((prev) => prev + " paused");
       }
     }
-  };
-  const handleTimeUpdate = () => {
-    if (videoRef.current) {
-      setCurrentTime(videoRef.current.currentTime);
-    }
-    // if (TimeLineContainerRef.current) {
-    // if (videoRef.current) {
-    // const percent =
-    //   videoRef.current!.currentTime / videoRef.current?.duration;
-    // TimeLineContainerRef.current.style.setProperty(
-    //   "--progress-position",
-    //   percent.toString()
-    // );
-    // }
-    // setCurrentPercent(
-    //   (videoRef.current!.currentTime / videoRef.current!.duration) * 100
-    // );
-    // }
   };
   const toggleCaptions = () => {
     setIsCaptions((prev) => !prev);
@@ -143,79 +126,94 @@ function VideoPlayer() {
     }
   };
 
+  const handleTimeUpdate = () => {
+    if (videoRef.current) {
+      setCurrentTime(videoRef.current.currentTime);
+    }
+    if (TimeLineContainerRef.current) {
+      if (videoRef.current) {
+        const percent =
+          videoRef.current!.currentTime / videoRef.current?.duration;
+        TimeLineContainerRef.current.style.setProperty(
+          "--progress-position",
+          percent.toString()
+        );
+      }
+    }
+  };
   const skip = (duration: number) => {
     if (videoRef.current) videoRef.current.currentTime += duration;
   };
-  // const toggleScrubbing = (e: MouseEvent) => {
-  //   e.preventDefault();
-  //   const timeLine = TimeLineContainerRef.current;
-  //   if (timeLine) {
-  //     const rect = timeLine.getBoundingClientRect();
-  //     const percent =
-  //       Math.min(Math.max(0, e.clientX - rect.x), rect.width) / rect.width;
+  const toggleScrubbing = (e: MouseEvent) => {
+    e.preventDefault();
+    const timeLine = TimeLineContainerRef.current;
+    if (timeLine) {
+      const rect = timeLine.getBoundingClientRect();
+      const percent =
+        Math.min(Math.max(0, e.clientX - rect.x), rect.width) / rect.width;
 
-  //     setIsScrubbing(e.button === 0);
-  //     const videoContainer = videoContainerRef.current;
-  //     if (videoContainer) {
-  //       videoContainer.classList.toggle("scrubbing", isScrubbing);
-  //     }
-  //     console.log(isScrubbing, e.button);
-  //     const video = videoRef.current;
-  //     if (video) {
-  //       if (isScrubbing) {
-  //         video.pause();
-  //         setWasPaused(video.paused);
-  //         console.log("IS SCRUBING");
-  //       } else {
-  //         video.currentTime = percent * video.duration;
-  //         console.log("IS NOT SCRUBING");
+      setIsScrubbing(e.button === 0);
+      const videoContainer = videoContainerRef.current;
+      if (videoContainer) {
+        videoContainer.classList.toggle("scrubbing", isScrubbing);
+      }
+      console.log(isScrubbing, e.button);
+      const video = videoRef.current;
+      if (video) {
+        if (isScrubbing) {
+          video.pause();
+          setWasPaused(video.paused);
+          console.log("IS SCRUBING");
+        } else {
+          video.currentTime = percent * video.duration;
+          console.log("IS NOT SCRUBING");
 
-  //         if (wasPaused) video.play();
-  //       }
-  //     }
-  //   }
-  //   handleTimeLineUpdate(e);
-  // };
+          if (wasPaused) video.play();
+        }
+      }
+    }
+    handleTimeLineUpdate(e);
+  };
 
-  // const handleTimeLineUpdate = (e: MouseEvent) => {
-  //   if (TimeLineContainerRef.current) {
-  //     const rect = TimeLineContainerRef.current.getBoundingClientRect();
-  //     const percent =
-  //       Math.min(Math.max(0, e.clientX - rect.x), rect.width) / rect.width;
-  //     const previewImgNumber = Math.max(
-  //       0,
-  //       Math.floor(
-  //         percent * videoRef.current!.duration
-  //         // ? set number of seconds that you are using for preview images splits
-  //         // / 10
-  //       )
-  //     );
-  //     const previewImgSrc = `/videos/previewImgs/out_${minDigit(
-  //       previewImgNumber,
-  //       4
-  //     )}.png`;
+  const handleTimeLineUpdate = (e: MouseEvent) => {
+    if (TimeLineContainerRef.current) {
+      const rect = TimeLineContainerRef.current.getBoundingClientRect();
+      const percent =
+        Math.min(Math.max(0, e.clientX - rect.x), rect.width) / rect.width;
+      const previewImgNumber = Math.max(
+        0,
+        Math.floor(
+          percent * videoRef.current!.duration
+          // ? set number of seconds that you are using for preview images splits
+          // / 10
+        )
+      );
+      const previewImgSrc = `/videos/previewImgs/out_${minDigit(
+        previewImgNumber,
+        4
+      )}.png`;
 
-  //     TimeLineContainerRef.current.style.setProperty(
-  //       "--preview-position",
-  //       percent.toString()
-  //     );
+      TimeLineContainerRef.current.style.setProperty(
+        "--preview-position",
+        percent.toString()
+      );
 
-  //     if (previewImgRef.current) {
-  //       previewImgRef.current.src = previewImgSrc;
-  //     }
-  //     if (isScrubbing) {
-  //       e.preventDefault();
-  //       if (thumbnailImgRef.current) {
-  //         thumbnailImgRef.current.src = previewImgSrc;
-  //       }
+      if (previewImgRef.current) {
+        previewImgRef.current.src = previewImgSrc;
+      }
+      if (isScrubbing) {
+        e.preventDefault();
+        if (thumbnailImgRef.current) {
+          thumbnailImgRef.current.src = previewImgSrc;
+        }
 
-  //       TimeLineContainerRef.current.style.setProperty(
-  //         "--progress-position",
-  //         percent.toString()
-  //       );
-  //     }
-  //   }
-  // };
+        TimeLineContainerRef.current.style.setProperty(
+          "--progress-position",
+          percent.toString()
+        );
+      }
+    }
+  };
 
   useEffect(() => {
     console.log("start");
@@ -275,24 +273,24 @@ function VideoPlayer() {
     videoRef.current?.addEventListener("play", handlePlayerStatus);
     videoRef.current?.addEventListener("pause", handlePlayerStatus);
 
-    // TimeLineContainerRef.current?.addEventListener(
-    //   "mousemove",
-    //   handleTimeLineUpdate
-    // );
+    TimeLineContainerRef.current?.addEventListener(
+      "mousemove",
+      handleTimeLineUpdate
+    );
 
     document.addEventListener("keydown", handleKeyDown);
 
     document.addEventListener("fullscreenchange", handleFullScreenStatus);
 
-    // TimeLineContainerRef.current?.addEventListener(
-    //   "mousedown",
-    //   toggleScrubbing
-    // );
-    // document.addEventListener("mouseup", (e) => {
-    //   setIsScrubbing(false);
+    TimeLineContainerRef.current?.addEventListener(
+      "mousedown",
+      toggleScrubbing
+    );
+    document.addEventListener("mouseup", (e) => {
+      setIsScrubbing(false);
 
-    //   if (isScrubbing) toggleScrubbing(e);
-    // });
+      if (isScrubbing) toggleScrubbing(e);
+    });
 
     videoRef.current?.addEventListener("enterpictureinpicture", () => {
       videoContainerRef.current?.classList.add("mini-player");
@@ -306,11 +304,11 @@ function VideoPlayer() {
       videoRef.current?.removeEventListener("pause", handlePlayerStatus);
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("fullscreenchange", handleFullScreenStatus);
-      // TimeLineContainerRef.current?.removeEventListener(
-      //   "mousedown",
-      //   toggleScrubbing
-      // );
-      // document.removeEventListener("mouseup", toggleScrubbing);
+      TimeLineContainerRef.current?.removeEventListener(
+        "mousedown",
+        toggleScrubbing
+      );
+      document.removeEventListener("mouseup", toggleScrubbing);
     };
   }, []);
 
@@ -341,27 +339,18 @@ function VideoPlayer() {
         ref={thumbnailImgRef}
       />
       <div className="video-controls-container">
-        <Timeline
-          onProgressChange={(e: number) => {
-            // console.log(e);
-            videoRef!.current!.currentTime = e;
-          }}
-          currentProgress={currentTime}
-          duration={duration}
-          onSeekingChange={(status: boolean) => {
-            const video = videoRef!.current!;
-            if (status) {
-              setWasPaused(!video.paused);
-              video.pause();
-            } else {
-              if (wasPaused) video.play();
-            }
-          }}
-          onThumbnailChange={(e) => {
-            console.log(e);
-            thumbnailImgRef.current!.src = e;
-          }}
-        />
+        <div
+          className="timeline-container"
+          ref={TimeLineContainerRef}
+        >
+          <div className="timeline">
+            <img
+              className="preview-img"
+              ref={previewImgRef}
+            />
+            <div className="thumb-indicator"></div>
+          </div>
+        </div>
         <div className="controls">
           <button
             className="play-pause-btn"
@@ -453,137 +442,3 @@ function VideoPlayer() {
 }
 
 export default VideoPlayer;
-
-interface timelineProps {
-  onProgressChange: (number: number) => void;
-  currentProgress: number;
-  duration: number;
-  onSeekingChange: (status: boolean) => void;
-  onThumbnailChange: (src: string) => void;
-}
-function Timeline({
-  onProgressChange,
-  onSeekingChange,
-  onThumbnailChange,
-  currentProgress,
-  duration,
-}: timelineProps) {
-  const [progress, setProgress] = useState(currentProgress);
-  const timeLineContainerRef = useRef<HTMLDivElement>(null);
-  const previewImgRef = useRef<HTMLImageElement>(null);
-
-  const isSeeking = useRef(false);
-
-  const calculateProgress = (clientX: number) => {
-    const timeLine = timeLineContainerRef.current;
-    if (timeLine && duration) {
-      const rect = timeLine.getBoundingClientRect();
-      const clickPosition = clientX - rect.left;
-      const newProgress = (clickPosition / rect.width) * duration;
-      return Math.floor(Math.min(Math.max(newProgress, 0), duration));
-    }
-    return 0;
-  };
-
-  const handleMouseDown = (e: React.MouseEvent | MouseEvent) => {
-    e.preventDefault();
-    if (e.button === 0) {
-      isSeeking.current = true;
-      const newProgress = calculateProgress(e.clientX);
-      setProgress(newProgress);
-      onProgressChange(newProgress);
-      onSeekingChange(true);
-      timeLineContainerRef.current?.classList.add("scrubbing");
-    }
-  };
-
-  const handleMouseMove = (e: React.MouseEvent | MouseEvent) => {
-    if (isSeeking.current) {
-      const newProgress = calculateProgress(e.clientX);
-      setProgress(newProgress);
-      onProgressChange(newProgress);
-      handleTimeLineUpdate(e);
-    }
-  };
-  const handMouseUp = (e: React.MouseEvent | MouseEvent) => {
-    if (isSeeking.current && e.button === 0) {
-      isSeeking.current = false;
-      onSeekingChange(false);
-      timeLineContainerRef.current?.classList.remove("scrubbing");
-    }
-  };
-
-  const handleTimeLineUpdate = (e: React.MouseEvent | MouseEvent) => {
-    if (timeLineContainerRef.current) {
-      const rect = timeLineContainerRef.current.getBoundingClientRect();
-      const percent =
-        Math.min(Math.max(0, e.clientX - rect.x), rect.width) / rect.width;
-      const previewImgNumber = Math.max(
-        0,
-        Math.floor(
-          percent * duration
-          // ? set number of seconds that you are using for preview images splits
-          // / 10
-        )
-      );
-      const previewImgSrc = `/videos/previewImgs/out_${minDigit(
-        previewImgNumber,
-        4
-      )}.png`;
-
-      timeLineContainerRef.current.style.setProperty(
-        "--preview-position",
-        percent.toString()
-      );
-
-      if (previewImgRef.current) {
-        previewImgRef.current.src = previewImgSrc;
-      }
-      if (isSeeking) {
-        e.preventDefault();
-        onThumbnailChange(previewImgSrc);
-        timeLineContainerRef.current.style.setProperty(
-          "--progress-position",
-          percent.toString()
-        );
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (isSeeking.current) {
-      window.addEventListener("mousemove", handleMouseMove);
-      window.addEventListener("mouseup", handMouseUp);
-    } else {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handMouseUp);
-      return () => {
-        window.removeEventListener("mousemove", handleMouseMove);
-        window.removeEventListener("mouseup", handMouseUp);
-      };
-    }
-  }, [isSeeking.current]);
-  useEffect(() => {
-    setProgress(currentProgress);
-    timeLineContainerRef.current?.style.setProperty(
-      "--progress-position",
-      currentProgress == 0 ? "0" : (progress / duration).toString()
-    );
-  }, [currentProgress, duration, progress]);
-
-  return (
-    <div
-      className="timeline-container"
-      ref={timeLineContainerRef}
-      onMouseDown={handleMouseDown}
-    >
-      <div className="timeline">
-        <img
-          className="preview-img"
-          ref={previewImgRef}
-        />
-        <div className="thumb-indicator"></div>
-      </div>
-    </div>
-  );
-}
