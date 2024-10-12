@@ -36,7 +36,7 @@ function ResponsiveAppBar() {
   const settingNames: settingsType = dic.settings;
   const { push } = useRouter();
 
-  const pages = ["Products", "Pricing", "About"];
+  const pages = ["products", "pricing", "about"];
   const settings = [
     {
       name: "Profile",
