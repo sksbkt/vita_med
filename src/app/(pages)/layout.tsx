@@ -6,7 +6,7 @@ function PageLayout({ children }: { children: React.ReactNode }) {
     return <Container>
         <NextBreadcrumb
         homeElement={'Home'}
-        separator={<span> &gt; </span>}
+        separator={<span> / </span>}
         activeClasses='text-amber-500'
         containerClasses='flex py-5' 
         listClasses='hover:underline mx-2 font-bold'
