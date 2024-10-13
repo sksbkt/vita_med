@@ -39,9 +39,11 @@ function MuiProvider({ children }: { children: React.ReactNode }) {
             <CacheProvider value={cacheRtl}>
               <CssBaseline />
               <GlobalStyles
-                styles={{
-                  "*": { transition: "background-color 0.3s, color 0.3s" },
-                }}
+                styles={
+                  {
+                    // "*": { transition: "background-color 0.3s, color 0.3s" },
+                  }
+                }
               />
               {children}
             </CacheProvider>
