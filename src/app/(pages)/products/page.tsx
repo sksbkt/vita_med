@@ -58,10 +58,18 @@ function Products() {
     backgroundColor:
       theme.palette.mode === "dark"
         ? theme.palette.primary.contrastText
-        : "rgba(0,0,0,.7)",
+        : "rgba(0,0,0,0.8)",
     "& .MuiPaginationItem-root": {
       color: "#fff",
     },
+    "& .MuiPaginationItem-root.Mui-selected": {
+      // color:
+      //   theme.palette.mode === "dark"
+      //     ? theme.palette.error.light
+      //     : "rgba(255,255,255,.4)",
+      backgroundColor: "#333",
+    },
+
     borderRadius: "10px",
     maxWidth: "50%",
     padding: "10px 0",
@@ -141,6 +149,7 @@ function Products() {
             console.log(page);
           }}
           count={10}
+          page={3}
           shape="rounded"
         />
       </Box>
