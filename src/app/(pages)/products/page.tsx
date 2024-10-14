@@ -6,22 +6,29 @@ import {
   Card,
   CardContent,
   CardMedia,
+  Checkbox,
   Collapse,
   Container,
+  Dialog,
+  FormControlLabel,
   Grid,
   IconButton,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  ListSubheader,
   Pagination,
   Paper,
   Rating,
   Stack,
+  SxProps,
+  Theme,
   Typography,
   styled,
+  useMediaQuery,
 } from "@mui/material";
-
+import FilterListIcon from "@mui/icons-material/FilterList";
 const product = {
   imgUrl:
     "https://fastly.picsum.photos/id/63/5000/2813.jpg?hmac=HvaeSK6WT-G9bYF_CyB2m1ARQirL8UMnygdU9W6PDvM",
@@ -33,12 +40,28 @@ const product = {
 };
 
 function Products() {
+  const [showFilter, setShowFilter] = useState(false);
+  const screenMd = useMediaQuery((theme: Theme) =>
+    theme.breakpoints.down("md")
+  );
+  useEffect(() => {
+    console.log(screenMd);
+    if (!screenMd) {
+      setShowFilter(false);
+    }
+  }, [screenMd]);
   const Paginator = styled(Pagination)(({ theme }) => ({
     display: "flex",
     justifyContent: "center",
     bottom: 0,
     boxShadow: "0 4px 6px rgba(0, 0, 0, .3)",
-    backgroundColor: theme.palette.primary.contrastText,
+    backgroundColor:
+      theme.palette.mode === "dark"
+        ? theme.palette.primary.contrastText
+        : "rgba(0,0,0,.7)",
+    "& .MuiPaginationItem-root": {
+      color: "#fff",
+    },
     borderRadius: "10px",
     maxWidth: "50%",
     padding: "10px 0",
@@ -46,7 +69,7 @@ function Products() {
       position: "fixed",
       left: "50%",
       transform: "translateX(-50%)",
-      backgroundColor: theme.palette.primary.contrastText,
+
       bottom: "10px",
       maxWidth: "80%",
       width: "80%",
@@ -74,9 +97,9 @@ function Products() {
           {[
             0, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2,
             1, 2,
-          ].map((value) => (
+          ].map((value, index) => (
             <ProductCard
-              key={value}
+              key={index}
               productName={product.productName}
               imageUrl={product.imgUrl}
               description={product.description}
@@ -94,8 +117,16 @@ function Products() {
           container
           md={3}
           // sx={{ backgroundColor: "blue" }}
+          sx={(theme) => ({
+            [theme.breakpoints.down("md")]: {
+              display: "none",
+            },
+          })}
         >
-          <Filter />
+          <Filter
+            onAvailableChange={(status) => console.log(status)}
+            onRatingChange={(status) => console.log(status)}
+          />
         </Grid>
       </Grid>
       <Box
@@ -113,6 +144,43 @@ function Products() {
           shape="rounded"
         />
       </Box>
+      <IconButton
+        sx={(theme) => ({
+          width: "4rem",
+          aspectRatio: 1 / 1,
+          position: "fixed",
+          bottom: "10%",
+          right: "10%",
+          backgroundColor:
+            theme.palette.mode === "dark"
+              ? theme.palette.primary.contrastText
+              : "rgba(0,0,0,.8)",
+          color: "#fff",
+          [theme.breakpoints.up("md")]: {
+            display: "none",
+          },
+        })}
+        disableRipple
+        onClick={() => {
+          setShowFilter((prev) => !prev);
+        }}
+      >
+        <FilterListIcon />
+      </IconButton>
+      <Dialog
+        open={showFilter}
+        // TransitionComponent={Transition}
+        keepMounted
+        onClose={() => {
+          setShowFilter(false);
+        }}
+        aria-describedby="alert-dialog-slide-description"
+        PaperProps={{
+          style: { backgroundColor: "transparent" },
+        }}
+      >
+        <Filter sx={{ width: "clamp(300px, 5vw + 4rem ,300px)" }} />
+      </Dialog>
     </Container>
   );
 }
@@ -182,12 +250,17 @@ const ProductCard = ({
               aspectRatio: 1 / 1,
             })}
           />
-          <FavoriteBtn
-            favorite={favorite}
-            favoriteChanged={(status) => {
-              favoriteChanged(status);
+
+          <IconButton
+            sx={{ position: "absolute", bottom: 0, right: 0 }}
+            disableRipple
+            onClick={() => {
+              setLocalFavorite((prev) => !prev);
+              // favoriteChanged(!favorite);
             }}
-          />
+          >
+            {localFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+          </IconButton>
         </Box>
         <CardContent
           sx={{
@@ -284,40 +357,128 @@ const ProductCard = ({
     </Grid>
   );
 };
-
-const Filter = () => {
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+interface filterProps {
+  onAvailableChange?: (status: boolean) => void | undefined;
+  onFavoriteChange?: (status: boolean) => void | undefined;
+  onRatingChange?: (status: number) => void | undefined;
+  sx?: SxProps<Theme> | undefined;
+}
+const Filter = ({
+  onAvailableChange,
+  onFavoriteChange,
+  onRatingChange,
+  sx,
+}: filterProps) => {
   const [open, setOpen] = useState(false);
+  const [available, setAvailable] = useState(false);
+  const [favorite, setFavorite] = useState(false);
+  const [rating, setRating] = useState(3);
+  // useEffect(() => {
+  //   onAvailableChange(available);
+  //   onFavoriteChange(favorite)
+  //   onRatingChange(rating);
+  // }, []);
+
+  const CustomListButton = styled(ListItemButton)(({ theme }) => ({
+    paddingLeft: "2.5rem",
+  }));
   return (
-    <Card sx={{ width: "100%", borderRadius: "20px", p: 3 }}>
-      <ListItemButton
-        onClick={() => setOpen((prev) => !prev)}
-        disableRipple
-      >
-        <ListItemIcon></ListItemIcon>
-        <ListItemText primary="Filter by" />
-        {open ? <ExpandLess /> : <ExpandMore />}
-      </ListItemButton>
-      <Collapse
-        in={open}
-        timeout="auto"
-        unmountOnExit
-      >
-        <List
-          component="div"
-          disablePadding
-        >
-          <ListItemButton
-            sx={{ pl: 4 }}
-            disableRipple
+    <Card
+      elevation={3}
+      sx={{
+        // aspectRatio: "9 / 16",
+        width: "100%",
+        // borderRadius: "20px",
+        height: "40rem",
+
+        // display: "flex",
+        // flexDirection: "column",
+        borderRadius: "20px",
+
+        ...sx,
+      }}
+    >
+      <List
+        // sx={{ width: "100%", backgroundColor: "transparent" }}
+        component="nav"
+        aria-labelledby="nested-list-subheader"
+        subheader={
+          <ListSubheader
+            sx={{
+              backgroundColor: "transparent",
+            }}
+            component="div"
+            id="nested-list-subheader"
           >
-            <ListItemIcon>
-              {/* <StarBorder /> */}
-              <FavoriteBtn favoriteChanged={() => console.log("filtered")} />
-            </ListItemIcon>
-            <ListItemText primary="Favorite" />
-          </ListItemButton>
-        </List>
-      </Collapse>
+            Filters
+          </ListSubheader>
+        }
+      >
+        <CustomListButton
+          onClick={() => {
+            if (onAvailableChange) onAvailableChange(!available);
+            setAvailable((prev) => !prev);
+          }}
+        >
+          <ListItemIcon>
+            {available ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
+          </ListItemIcon>
+          <ListItemText primary="Available" />
+        </CustomListButton>
+        <CustomListButton onClick={() => setFavorite((prev) => !prev)}>
+          <ListItemIcon>
+            {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+          </ListItemIcon>
+          <ListItemText primary="Favorite" />
+        </CustomListButton>
+        <CustomListButton
+          onClick={() => {
+            setOpen((prev) => !prev);
+          }}
+        >
+          <ListItemIcon>{open ? <ExpandMore /> : <ExpandLess />}</ListItemIcon>
+          <ListItemText primary="Rating" />
+        </CustomListButton>
+        <Collapse
+          in={open}
+          timeout="auto"
+          unmountOnExit
+        >
+          <List
+            component="div"
+            disablePadding
+          >
+            <ListItemButton
+              sx={{
+                "&:hover": { backgroundColor: "transparent" },
+                display: "flex",
+                justifyContent: "center",
+              }}
+              disableRipple
+            >
+              {/* <ListItemIcon>
+                <StarBorder />
+              </ListItemIcon>
+              <ListItemText primary="Starred" /> */}
+              <Rating
+                name="hover-feedback"
+                value={rating}
+                // readOnly
+                size={"medium"}
+                onChange={(e, newValue) => {
+                  if (onRatingChange && newValue) onRatingChange(newValue);
+                  setRating(newValue ?? 3);
+                }}
+                sx={(theme) => ({
+                  color: theme.palette.primary.main,
+                })}
+              />
+            </ListItemButton>
+          </List>
+        </Collapse>
+      </List>
     </Card>
   );
 };
@@ -325,9 +486,11 @@ const Filter = () => {
 const FavoriteBtn = ({
   favorite = false,
   favoriteChanged,
+  sx,
 }: {
   favorite?: boolean;
   favoriteChanged: (status: boolean) => void;
+  sx?: SxProps<Theme>;
 }) => {
   const [localFavorite, setLocalFavorite] = useState(favorite);
   useEffect(() => {
@@ -335,12 +498,8 @@ const FavoriteBtn = ({
   }, [localFavorite]);
   return (
     <IconButton
-      sx={{
-        position: "absolute",
-        bottom: 0,
-        right: 0,
-        p: 2,
-      }}
+      sx={sx}
+      disableRipple
       onClick={() => {
         setLocalFavorite((prev) => !prev);
         // favoriteChanged(!favorite);
