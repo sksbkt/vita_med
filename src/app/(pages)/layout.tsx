@@ -1,19 +1,33 @@
+"use client";
 import NextBreadcrumb from "@/components/nextBreadCrumbs/nextBreadCrumb";
-import { Container } from "@mui/material";
+import { Container, styled } from "@mui/material";
 import React from "react";
 
 function PageLayout({ children }: { children: React.ReactNode }) {
-    return <Container>
-        <NextBreadcrumb
-        homeElement={'Home'}
+  const LayoutContainer = styled(Container)(({ theme }) => ({
+    [theme.breakpoints.down("md")]: {
+      width: "100%",
+    },
+    [theme.breakpoints.up("md")]: {
+      width: "90%",
+    },
+  }));
+  return (
+    <LayoutContainer
+      sx={{}}
+      maxWidth={false}
+    >
+      <NextBreadcrumb
+        homeElement={"Home"}
         separator={<span> / </span>}
-        activeClasses='text-amber-500'
-        containerClasses='flex py-5' 
-        listClasses='hover:underline mx-2 font-bold'
+        activeClasses="text-amber-500"
+        containerClasses="flex py-5"
+        listClasses="hover:underline mx-2 font-bold"
         capitalizeLinks
-        />
-        {children}
-    </Container>;
+      />
+      {children}
+    </LayoutContainer>
+  );
 }
 
 export default PageLayout;

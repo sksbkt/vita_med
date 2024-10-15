@@ -8,6 +8,7 @@ import ResponsiveAppBar from "@/components/mui/NavBar";
 import AuthWrapper from "@/providers/authWrapper";
 import { prisma } from "@/lib/utils/prisma";
 import { Role } from "@prisma/client";
+import { Container } from "@mui/material";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,10 +33,17 @@ export default async function RootLayout({
         <StoreProvider>
           <AuthWrapper>
             <MuiProvider>
-              {/* <HtmlClientSide> */}
-              <ResponsiveAppBar />
-              {children}
-              {/* </HtmlClientSide> */}
+              <Container
+                // ? gets rid of the default padding on MUI container
+                disableGutters
+                // ? gets rid of the default maxWidth on MUI container
+                maxWidth={false}
+              >
+                {/* <HtmlClientSide> */}
+                <ResponsiveAppBar />
+                {children}
+                {/* </HtmlClientSide> */}
+              </Container>
             </MuiProvider>
           </AuthWrapper>
         </StoreProvider>
