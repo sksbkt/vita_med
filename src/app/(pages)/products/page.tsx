@@ -83,8 +83,7 @@ function Products() {
       >
         <Grid
           container
-          md={2}
-          // sx={{ backgroundColor: "blue" }}
+          md={3}
           sx={(theme) => ({
             [theme.breakpoints.down("md")]: {
               display: "none",
@@ -100,8 +99,7 @@ function Products() {
           container
           justifyContent="flex-start" // Aligns items to the left
           spacing={2} // Spacing between grid items
-          // sx={{ p: "10px" }}
-          md={10}
+          md={9}
         >
           {[
             0, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2,
@@ -180,30 +178,3 @@ function Products() {
   );
 }
 export default Products;
-
-const FavoriteBtn = ({
-  favorite = false,
-  favoriteChanged,
-  sx,
-}: {
-  favorite?: boolean;
-  favoriteChanged: (status: boolean) => void;
-  sx?: SxProps<Theme>;
-}) => {
-  const [localFavorite, setLocalFavorite] = useState(favorite);
-  useEffect(() => {
-    favoriteChanged(localFavorite);
-  }, [localFavorite]);
-  return (
-    <IconButton
-      sx={sx}
-      disableRipple
-      onClick={() => {
-        setLocalFavorite((prev) => !prev);
-        // favoriteChanged(!favorite);
-      }}
-    >
-      {localFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-    </IconButton>
-  );
-};

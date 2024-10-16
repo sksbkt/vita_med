@@ -76,11 +76,8 @@ const ProductCardComponent = ({
     >
       <Card
         elevation={5}
-        // variant="outlined"
         sx={(theme) => ({
           // ? replaced with elevation variable
-          // boxShadow:
-          //   "0 2.8px 2.2px rgba(0, 0, 0, 0.034),  0 6.7px 5.3px rgba(0, 0, 0, 0.048),  0 12.5px 5px rgba(0, 0, 0, 0.06),  0 5.3px 5.9px rgba(0, 0, 0, 0.072),  0 5.8px 13.4px rgba(0, 0, 0, 0.086),  0 5px 5px rgba(0, 0, 0, 0.12)",
           aspectRatio: 9 / 16,
           ...theme.applyStyles("dark", {
             backgroundColor: "#1A2027",

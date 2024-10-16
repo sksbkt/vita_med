@@ -5,13 +5,15 @@ import React from "react";
 
 function PageLayout({ children }: { children: React.ReactNode }) {
   const LayoutContainer = styled(Container)(({ theme }) => ({
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down("lg")]: {
       width: "100%",
     },
-    [theme.breakpoints.up("md")]: {
+    [theme.breakpoints.up("lg")]: {
+      maxWidth: "1920px",
       width: "90%",
     },
   }));
+
   return (
     <LayoutContainer
       sx={{}}
