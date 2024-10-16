@@ -22,7 +22,9 @@ import {
   ListSubheader,
   Paper,
   Rating,
+  Slider,
   SxProps,
+  TextField,
   Theme,
   Typography,
   styled,
@@ -39,17 +41,24 @@ interface filterProps {
   onRatingChange?: (status: number) => void | undefined;
   sx?: SxProps<Theme> | undefined;
 }
-type collapseList = "rating" | "brand" | "";
+export type FilterType = {
+  favorites: boolean;
+  available: boolean;
+  brans: [string];
+  rating: number;
+  priceRange: { min: number; max: number };
+};
+
 const FilterComponent = ({
   onAvailableChange,
   onFavoriteChange,
   onRatingChange,
   sx,
 }: filterProps) => {
-  const [openCollapse, setOpenCollapse] = useState<collapseList>("brand");
   const [available, setAvailable] = useState(false);
   const [favorite, setFavorite] = useState(false);
   const [rating, setRating] = useState(3);
+  const [value, setValue] = useState<number[]>([200, 400]);
   const CustomListButton = styled(ListItemButton)(({ theme }) => ({
     paddingLeft: "2.5rem",
   }));
@@ -62,7 +71,9 @@ const FilterComponent = ({
     backgroundColor: theme.palette.background.paper,
     boxShadow: "none",
   }));
-
+  function valuetext(value: number) {
+    return `${value}°C`;
+  }
   return (
     <Grid
       sx={(theme) => ({
@@ -89,6 +100,51 @@ const FilterComponent = ({
             color: theme.palette.primary.main,
           })}
         />
+      </FilterInput>
+      <FilterInput
+        title="Price"
+        type="accordion"
+      >
+        <Slider
+          getAriaLabel={() => "Temperature range"}
+          value={value}
+          max={1000}
+          onChange={(e, newValue) => setValue(newValue as number[])}
+          valueLabelDisplay="auto"
+          // getAriaValueText={valuetext}
+        />
+        <Box sx={{ display: "flex", justifyContent: "space-between", p: 2 }}>
+          <TextField
+            id="outlined-basic"
+            label="To"
+            variant="outlined"
+            value={value[0]}
+            sx={{ width: "5rem" }}
+            inputProps={{ style: { height: 10, resize: "both" } }}
+            onChange={(e) => {
+              const input = Number(e.target.value);
+
+              setValue((prev) => {
+                return [input, prev[1]];
+              });
+            }}
+          />
+          <TextField
+            id="outlined-basic"
+            label="From"
+            variant="outlined"
+            value={value[1]}
+            sx={{ width: "5rem" }}
+            inputProps={{ style: { height: 10, resize: "both" } }}
+            onChange={(e) => {
+              const input = Number(e.target.value);
+
+              setValue((prev) => {
+                return [prev[0], input];
+              });
+            }}
+          />
+        </Box>
       </FilterInput>
       <FilterInput title="sss">
         <FormControlLabel
@@ -150,185 +206,11 @@ const FilterComponent = ({
           </Typography>
         </CustomAccordionDetails>
       </Accordion>
-      <Accordion disabled>
-        <CustomAccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel3-content"
-          id="panel3-header"
-        >
-          <Typography>Disabled Accordion</Typography>
-        </CustomAccordionSummary>
-      </Accordion>
     </Grid>
-    // <Card
-    //   sx={{
-    //     width: "100%",
-    //     height: "40rem",
-    //     ...sx,
-    //   }}
-    // >
-    //   <List
-    //     // sx={{ width: "100%", backgroundColor: "transparent" }}
-    //     component="nav"
-    //     aria-labelledby="nested-list-subheader"
-    //     disablePadding
-    //     subheader={
-    //       <ListSubheader
-    //         sx={{
-    //           backgroundColor: "transparent",
-    //         }}
-    //         component="div"
-    //         id="nested-list-subheader"
-    //       >
-    //         Filters
-    //       </ListSubheader>
-    //     }
-    //   >
-    //     <CustomListButton
-    //       onClick={() => {
-    //         if (onAvailableChange) onAvailableChange(!available);
-    //         setAvailable((prev) => !prev);
-    //       }}
-    //     >
-    //       <ListItemIcon>
-    //         {available ? <CheckBoxIcon /> : <CheckBoxOutlineBlankIcon />}
-    //       </ListItemIcon>
-    //       <ListItemText primary="Available" />
-    //     </CustomListButton>
-    //     <CustomListButton onClick={() => setFavorite((prev) => !prev)}>
-    //       <ListItemIcon>
-    //         {favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-    //       </ListItemIcon>
-    //       <ListItemText primary="Favorite" />
-    //     </CustomListButton>
-    //     {/* //? Rating */}
-    //     <CollapseItem
-    //       title={"Rating"}
-    //       active={openCollapse}
-    //       type="rating"
-    //       onCollapseChange={(active) => setOpenCollapse(active)}
-    //     >
-    //       <Rating
-    //         name="hover-feedback"
-    //         value={rating}
-    //         // readOnly
-    //         size={"medium"}
-    //         onChange={(e, newValue) => {
-    //           if (onRatingChange && newValue) onRatingChange(newValue);
-    //           setRating(newValue ?? 3);
-    //         }}
-    //         sx={(theme) => ({
-    //           color: theme.palette.primary.main,
-    //         })}
-    //       />
-    //     </CollapseItem>
-    //     <CollapseItem
-    //       title={"Brands"}
-    //       active={openCollapse}
-    //       type="brand"
-    //       onCollapseChange={(active) => setOpenCollapse(active)}
-    //     >
-    //       {MOCK_DATA.map((item, index) => (
-    //         <ListItem
-    //           key={item.id}
-    //           secondaryAction={
-    //             <Checkbox
-    //               edge="end"
-    //               // onChange={handleToggle(value)}
-    //               // checked={checked.includes(value)}
-    //               // inputProps={{ "aria-labelledby": labelId }}
-    //             />
-    //           }
-    //           sx={{
-    //             p: 1,
-    //             display: "flex",
-    //             justifyItems: "center",
-    //             alignItems: "center",
-    //           }}
-    //           disablePadding
-    //         >
-    //           <Avatar
-    //             alt={item.brand}
-    //             src={item.img}
-    //             sx={{ width: "2rem", height: "2rem", p: 0 }}
-    //           />
-    //           <Typography
-    //             sx={(theme) => ({
-    //               display: "-webkit-box",
-    //               overflow: "hidden",
-    //               WebkitBoxOrient: "vertical",
-    //               WebkitLineClamp: 1,
-    //               fontSize: "clamp(15px,12px,8px)",
-    //               [theme.breakpoints.up("md")]: {},
-    //               width: "50%",
-    //               px: 1,
-    //             })}
-    //           >
-    //             {item.brand}
-    //           </Typography>
-    //         </ListItem>
-    //       ))}
-    //     </CollapseItem>
-    //   </List>
-    // </Card>
   );
 };
 
 export default FilterComponent;
-interface collapseProps {
-  children: React.ReactNode;
-  onCollapseChange: (status: collapseList) => void;
-  active: collapseList;
-  type: collapseList;
-  title: string;
-}
-function CollapseItem({
-  children,
-  active,
-  type,
-  title,
-  onCollapseChange,
-}: collapseProps) {
-  const CustomListButton = styled(ListItemButton)(({ theme }) => ({
-    paddingLeft: "2.5rem",
-  }));
-
-  return (
-    <>
-      <CustomListButton
-        onClick={() => {
-          onCollapseChange(active === type ? "" : type);
-        }}
-      >
-        <ListItemIcon>
-          {active === type ? <ExpandMore /> : <ExpandLess />}
-        </ListItemIcon>
-        <ListItemText primary={title} />
-      </CustomListButton>
-      <Collapse
-        in={active === type}
-        timeout="auto"
-        unmountOnExit
-      >
-        <List
-          sx={{
-            "&:hover": { backgroundColor: "transparent" },
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyItems: "center",
-            width: "100%",
-            maxHeight: "30vh",
-            overflowY: "auto",
-            flexGrow: 1, // Add this line
-          }}
-        >
-          {children}
-        </List>
-      </Collapse>
-    </>
-  );
-}
 
 import React from "react";
 
