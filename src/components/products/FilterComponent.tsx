@@ -1,26 +1,15 @@
 "use client";
-import { ExpandMore, ExpandLess } from "@mui/icons-material";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import FavoriteIcon from "@mui/icons-material/Favorite";
+
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Avatar,
   Box,
-  Card,
   Checkbox,
-  Collapse,
   FormControlLabel,
   Grid,
-  List,
   ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  ListSubheader,
-  Paper,
   Rating,
   Slider,
   SxProps,
@@ -29,11 +18,10 @@ import {
   Typography,
   styled,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MOCK_DATA } from "@/helpers/MOCK/mock_products";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
 interface filterProps {
   onAvailableChange?: (status: boolean) => void | undefined;
@@ -185,27 +173,12 @@ const FilterComponent = ({
               }}
             />
             <Avatar
-              src={item.img}
+              src={item.imgUrl}
               sx={{ width: 30, height: 30 }}
             />
           </Box>
         ))}
       </FilterInput>
-      <Accordion>
-        <CustomAccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel2-content"
-          id="panel2-header"
-        >
-          <Typography>Accordion 2</Typography>
-        </CustomAccordionSummary>
-        <CustomAccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
-        </CustomAccordionDetails>
-      </Accordion>
     </Grid>
   );
 };
@@ -243,7 +216,6 @@ function FilterInput({ title, children, type }: FilterInputProps) {
             sx={{
               boxShadow: "none",
             }}
-            defaultExpanded
           >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
