@@ -9,6 +9,7 @@ import AuthWrapper from "@/providers/authWrapper";
 import { prisma } from "@/lib/utils/prisma";
 import { Role } from "@prisma/client";
 import { Container } from "@mui/material";
+import CustomNavBar from "@/components/navBar/CustomNavBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -40,7 +41,8 @@ export default async function RootLayout({
                 maxWidth={false}
               >
                 {/* <HtmlClientSide> */}
-                <ResponsiveAppBar />
+                {/* <ResponsiveAppBar /> */}
+                <CustomNavBar />
                 {children}
                 {/* </HtmlClientSide> */}
               </Container>

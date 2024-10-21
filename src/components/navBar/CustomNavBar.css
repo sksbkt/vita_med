@@ -1,0 +1,23 @@
+/* CustomNavBar.module.css */
+.navItem {
+  position: relative;
+}
+
+.dropdownMenu {
+  display: none;
+  background-color: #333;
+  min-width: 160px;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdownMenu a {
+  display: block;
+  color: white;
+  padding: 12px 16px;
+  text-decoration: none;
+}
+
+.navItem:hover .dropdownMenu {
+  display: block;
+}

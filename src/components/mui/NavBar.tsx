@@ -156,6 +156,9 @@ function ResponsiveAppBar() {
               ))}
             </Menu>
           </Box>
+          {/* 
+          //?  Desktop view
+          */}
           <Link
             href={"/"}
             sx={{
@@ -191,6 +194,7 @@ function ResponsiveAppBar() {
             {pages.map((page) => (
               <Button
                 key={page}
+                onMouseOver={(e) => {}}
                 onClick={() => {
                   handleCloseNavMenu();
                   push(`/${page}`);
